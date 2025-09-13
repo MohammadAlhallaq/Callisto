@@ -1,3 +1,3 @@
 <div align="center">
-  <img src="assets/callisto-logo.png" alt="Callisto Logo" width="100"/>
+  <img src="assets/callisto-logo.png" alt="Callisto Logo" width="300"/>
 </div>
