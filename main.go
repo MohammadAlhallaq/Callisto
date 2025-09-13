@@ -15,6 +15,8 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
+var methods = []string{"POST", "GET", "PATCH", "PUT", "DELETE"}
+
 func main() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
@@ -22,7 +24,7 @@ func main() {
 	urlEntry := widget.NewEntry()
 	urlEntry.SetPlaceHolder("Enter URL (e.g. https://httpbin.org/post)")
 
-	selecty := widget.NewSelect([]string{"POST", "GET", "PATCH", "PUT", "DELETE"}, func(s string) {
+	selecty := widget.NewSelect(methods, func(s string) {
 	})
 	selecty.PlaceHolder = "Method"
 
