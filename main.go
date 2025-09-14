@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Callisto/components"
 	"bytes"
 	"encoding/json"
 	"fmt"
@@ -21,22 +22,60 @@ func main() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 
-	urlEntry := widget.NewEntry()
-	urlEntry.SetPlaceHolder("Enter URL (e.g. https://httpbin.org/post)")
+	// INITIALIZE URL INPUT
+	urlEntry := components.NewURLEntry()
+
+	// INITIALIZE HEADERS INPUT
+	rowsContainer := container.NewVBox()
+	addRow := func() {
+		var row *fyne.Container
+
+		keyEntry := widget.NewEntry()
+		keyEntry.SetPlaceHolder("Key")
+
+		valueEntry := widget.NewEntry()
+		valueEntry.SetPlaceHolder("Value")
+
+		removeBtn := widget.NewButton("x", func() {
+			rowsContainer.Remove(row)
+			rowsContainer.Refresh()
+		})
+		
+		row = container.New(layout.NewGridLayout(3), keyEntry, valueEntry, removeBtn)
+
+		rowsContainer.Add(row)
+		rowsContainer.Refresh()
+	}
+
+	addBtn := widget.NewButton("+", func() {
+		addRow()
+	})
+
+	headersEntry := container.NewVBox(
+		rowsContainer,
+		addBtn,
+	)
+
+	// INITIALIZE BODY REQUEST INPUT
+	bodyEntry := widget.NewMultiLineEntry()
+	bodyEntry.SetPlaceHolder("Enter json input here...")
+
+	// INITIALIZE RESPONSE WIDGET
+	output := widget.NewMultiLineEntry()
+	output.SetPlaceHolder("Respones will appear here...")
+	output.Disable()
+	output.Wrapping = fyne.TextWrapWord
 
 	selecty := widget.NewSelect(methods, func(s string) {
 	})
 	selecty.Selected = "GET"
 
-	bodyEntry := widget.NewMultiLineEntry()
-	bodyEntry.SetPlaceHolder("Enter json input here...")
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Body", bodyEntry),
+		container.NewTabItem("Headers", headersEntry),
+	)
 
-	output := widget.NewMultiLineEntry()
-	output.SetPlaceHolder("Respones will appear here...")
-	output.Disable()
-	content := container.NewStack(output)
-
-	sendBtn := widget.NewButton("Send POST Request", func() {
+	sendBtn := widget.NewButton("Send Request", func() {
 		selecty.SelectedIndex()
 		client := &http.Client{Timeout: 10 * time.Second}
 		method := methods[selecty.SelectedIndex()]
@@ -59,10 +98,10 @@ func main() {
 		var prettyJSON bytes.Buffer
 		if err := json.Indent(&prettyJSON, body, "", "  "); err != nil {
 			// If response is not valid JSON, just show it as is
-			output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, wrapText(prettyJSON.String(), 120)))
+			output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, prettyJSON.String()))
 			return
 		}
-		output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, wrapText(prettyJSON.String(), 120)))
+		output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, prettyJSON.String()))
 	})
 
 	hbox := container.New(
@@ -71,27 +110,17 @@ func main() {
 		selecty,
 	)
 
-	content = container.NewBorder(
-		container.NewVBox(hbox, bodyEntry, sendBtn),
-		nil,
-		nil,
-		nil,
-		output,
+	upper := container.NewVBox(
+		hbox,
+		widget.NewLabel(""),
+		tabs,
+		container.NewPadded(sendBtn),
 	)
 
-	w.SetContent(content)
+	split := container.NewVSplit(upper, output)
+	split.SetOffset(0.1)
+
+	w.SetContent(split)
 	w.Resize(fyne.NewSize(600, 400))
 	w.ShowAndRun()
-}
-
-func wrapText(s string, maxLine int) string {
-	var result string
-	for i := 0; i < len(s); i += maxLine {
-		end := i + maxLine
-		if end > len(s) {
-			end = len(s)
-		}
-		result += s[i:end] + "\n"
-	}
-	return result
 }

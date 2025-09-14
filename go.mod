@@ -1,4 +1,4 @@
-module GoClient
+module Callisto
 
 go 1.25.1
 
