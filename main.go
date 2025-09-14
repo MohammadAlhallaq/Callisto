@@ -26,7 +26,7 @@ func main() {
 
 	selecty := widget.NewSelect(methods, func(s string) {
 	})
-	selecty.PlaceHolder = "Method"
+	selecty.Selected = "GET"
 
 	bodyEntry := widget.NewMultiLineEntry()
 	bodyEntry.SetPlaceHolder("Enter json input here...")
@@ -37,11 +37,12 @@ func main() {
 	content := container.NewStack(output)
 
 	sendBtn := widget.NewButton("Send POST Request", func() {
+		selecty.SelectedIndex()
 		client := &http.Client{Timeout: 10 * time.Second}
-		// method :=
+		method := methods[selecty.SelectedIndex()]
 
 		// Create request with body
-		req, err := http.NewRequest("POST", urlEntry.Text, bytes.NewBuffer([]byte(bodyEntry.Text)))
+		req, err := http.NewRequest(method, urlEntry.Text, bytes.NewBuffer([]byte(bodyEntry.Text)))
 		if err != nil {
 			output.SetText(fmt.Sprintf("Error creating request: %v", err))
 			return
@@ -58,7 +59,7 @@ func main() {
 		var prettyJSON bytes.Buffer
 		if err := json.Indent(&prettyJSON, body, "", "  "); err != nil {
 			// If response is not valid JSON, just show it as is
-			output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, string(body)))
+			output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, wrapText(prettyJSON.String(), 120)))
 			return
 		}
 		output.SetText(fmt.Sprintf("Status: %s\n\n%s", resp.Status, wrapText(prettyJSON.String(), 120)))
