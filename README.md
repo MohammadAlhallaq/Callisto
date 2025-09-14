@@ -27,10 +27,3 @@ Perfect for developers who want a fast, distraction-free alternative to heavy AP
 ### Prerequisites
 - [Go 1.22+](https://go.dev/dl/) installed  
 - Git installed  
-
-### Installation & Running
-
-Clone the repository:
-```bash
-git clone https://github.com/yourusername/callisto.git
-cd callisto
