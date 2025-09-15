@@ -24,8 +24,16 @@ func NewHeadersEntry() *fyne.Container {
 			rowsContainer.Refresh()
 		})
 
-		row = container.New(layout.NewGridLayout(3), keyEntry, valueEntry, removeBtn)
+		fields := container.New(
+			layout.NewGridLayout(2),
+			keyEntry,
+			valueEntry,
+		)
 
+		row = container.New(layout.NewBorderLayout(nil, nil, nil, removeBtn),
+			fields,
+			removeBtn,
+		)
 		rowsContainer.Add(row)
 		rowsContainer.Refresh()
 	}

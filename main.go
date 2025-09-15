@@ -26,18 +26,17 @@ func main() {
 	output := components.NewResponseView()
 	// INITIALIZE BODY REQUEST INPUT
 	bodyEntry := components.NewRequestBody()
-	// INITIALIZE METHODS dROPDOWN
+	// INITIALIZE METHODS DROPDOWN
 	selecty := components.NewDropdownMethods()
-
-	// INITIALIZE HEADERS INPUT
+	// INITIALIZE HEADERS ENTRY
+	headersEntry := components.NewHeadersEntry()
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Body", bodyEntry),
-		// container.NewTabItem("Headers", headersEntry),
+		container.NewTabItem("Headers", headersEntry),
 	)
 
 	sendBtn := widget.NewButton("Send Request", func() {
-		selecty.SelectedIndex()
 		client := &http.Client{Timeout: 10 * time.Second}
 		method := components.HTTPMethods[selecty.SelectedIndex()]
 
@@ -82,6 +81,6 @@ func main() {
 	split.SetOffset(0.1)
 
 	w.SetContent(split)
-	w.Resize(fyne.NewSize(600, 400))
+	w.Resize(fyne.NewSize(900, 600))
 	w.ShowAndRun()
 }
