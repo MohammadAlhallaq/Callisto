@@ -1,0 +1,42 @@
+package components
+
+import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
+)
+
+func NewHeadersEntry() *fyne.Container {
+
+	rowsContainer := container.NewVBox()
+	addRow := func() {
+		var row *fyne.Container
+
+		keyEntry := widget.NewEntry()
+		keyEntry.SetPlaceHolder("Key")
+
+		valueEntry := widget.NewEntry()
+		valueEntry.SetPlaceHolder("Value")
+
+		removeBtn := widget.NewButton("x", func() {
+			rowsContainer.Remove(row)
+			rowsContainer.Refresh()
+		})
+
+		row = container.New(layout.NewGridLayout(3), keyEntry, valueEntry, removeBtn)
+
+		rowsContainer.Add(row)
+		rowsContainer.Refresh()
+	}
+
+	addBtn := widget.NewButton("+", func() {
+		addRow()
+	})
+
+	headersEntry := container.NewVBox(
+		rowsContainer,
+		addBtn,
+	)
+	return headersEntry
+}

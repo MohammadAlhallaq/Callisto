@@ -16,69 +16,30 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-var methods = []string{"POST", "GET", "PATCH", "PUT", "DELETE"}
-
 func main() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 
 	// INITIALIZE URL INPUT
 	urlEntry := components.NewURLEntry()
+	// INITIALIZE RESPONSE WIDGET
+	output := components.NewResponseView()
+	// INITIALIZE BODY REQUEST INPUT
+	bodyEntry := components.NewRequestBody()
+	// INITIALIZE METHODS dROPDOWN
+	selecty := components.NewDropdownMethods()
 
 	// INITIALIZE HEADERS INPUT
-	rowsContainer := container.NewVBox()
-	addRow := func() {
-		var row *fyne.Container
-
-		keyEntry := widget.NewEntry()
-		keyEntry.SetPlaceHolder("Key")
-
-		valueEntry := widget.NewEntry()
-		valueEntry.SetPlaceHolder("Value")
-
-		removeBtn := widget.NewButton("x", func() {
-			rowsContainer.Remove(row)
-			rowsContainer.Refresh()
-		})
-		
-		row = container.New(layout.NewGridLayout(3), keyEntry, valueEntry, removeBtn)
-
-		rowsContainer.Add(row)
-		rowsContainer.Refresh()
-	}
-
-	addBtn := widget.NewButton("+", func() {
-		addRow()
-	})
-
-	headersEntry := container.NewVBox(
-		rowsContainer,
-		addBtn,
-	)
-
-	// INITIALIZE BODY REQUEST INPUT
-	bodyEntry := widget.NewMultiLineEntry()
-	bodyEntry.SetPlaceHolder("Enter json input here...")
-
-	// INITIALIZE RESPONSE WIDGET
-	output := widget.NewMultiLineEntry()
-	output.SetPlaceHolder("Respones will appear here...")
-	output.Disable()
-	output.Wrapping = fyne.TextWrapWord
-
-	selecty := widget.NewSelect(methods, func(s string) {
-	})
-	selecty.Selected = "GET"
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Body", bodyEntry),
-		container.NewTabItem("Headers", headersEntry),
+		// container.NewTabItem("Headers", headersEntry),
 	)
 
 	sendBtn := widget.NewButton("Send Request", func() {
 		selecty.SelectedIndex()
 		client := &http.Client{Timeout: 10 * time.Second}
-		method := methods[selecty.SelectedIndex()]
+		method := components.HTTPMethods[selecty.SelectedIndex()]
 
 		// Create request with body
 		req, err := http.NewRequest(method, urlEntry.Text, bytes.NewBuffer([]byte(bodyEntry.Text)))
