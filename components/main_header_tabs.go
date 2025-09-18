@@ -9,13 +9,13 @@ func NewMainHeaderTabs() *container.AppTabs {
 
 	addTab := container.NewTabItem("+", widget.NewLabel(""))
 	HeaderTabs := container.NewAppTabs(
-		container.NewTabItem("Body", NewFullBody()),
+		container.NewTabItem("New Request", NewFullBody()),
 		addTab,
 	)
 
 	HeaderTabs.OnSelected = func(ti *container.TabItem) {
 		if ti == addTab {
-			newTab := container.NewTabItem("New Tab", NewFullBody())
+			newTab := container.NewTabItem("New Request", NewFullBody())
 			items := HeaderTabs.Items
 			HeaderTabs.Items = append(items[:len(items)-1], newTab, addTab)
 			HeaderTabs.Select(newTab)

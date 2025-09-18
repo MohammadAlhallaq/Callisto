@@ -4,7 +4,7 @@
 
 # Callisto
 
-**Callisto** is a lightweight local HTTP development client built with [Go](https://go.dev/) and [Fyne](https://fyne.io/).  
+**Callisto** is a lightweight local API development client built with [Go](https://go.dev/) and [Fyne](https://fyne.io/).  
 It provides a simple desktop interface for composing HTTP requests and inspecting responses.  
 Perfect for developers who want a fast, distraction-free alternative to heavy API clients.
 
