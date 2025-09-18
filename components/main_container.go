@@ -1,0 +1,67 @@
+package components
+
+import (
+	"Callisto/network"
+	"fmt"
+	"time"
+
+	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
+	"fyne.io/fyne/v2/widget"
+)
+
+func NewFullBody() *container.Split {
+
+	// INITIALIZE URL INPUT
+	urlEntry := NewURLEntry()
+	// INITIALIZE RESPONSE WIDGET
+	output := NewResponseView()
+	// INITIALIZE BODY REQUEST INPUT
+	bodyEntry := NewRequestBody()
+	// INITIALIZE METHODS DROPDOWN
+	selecty := NewDropdownMethods()
+	// INITIALIZE HEADERS ENTRY
+	headersEntry := NewHeadersEntry()
+
+	tabs := container.NewAppTabs(
+		container.NewTabItem("Body", bodyEntry),
+		container.NewTabItem("Headers", headersEntry),
+	)
+
+	sendBtn := widget.NewButton("Send Request", func() {
+		client := network.NewClient(10 * time.Second)
+		headers := map[string]string{
+			"Content-Type": "application/json",
+		}
+		// Create request with body
+		result, err := client.Send(
+			HTTPMethods[selecty.SelectedIndex()],
+			urlEntry.Text,
+			bodyEntry.Text,
+			headers,
+		)
+		if err != nil {
+			output.SetText(fmt.Sprintf("Error sending request: %v", err))
+			return
+		}
+		output.SetText(result)
+	})
+
+	hbox := container.New(
+		layout.NewBorderLayout(nil, nil, selecty, nil),
+		urlEntry,
+		selecty,
+	)
+
+	upper := container.NewVBox(
+		hbox,
+		widget.NewLabel(""),
+		tabs,
+		container.NewPadded(sendBtn),
+	)
+
+	split := container.NewVSplit(upper, output)
+	split.SetOffset(0.1)
+
+	return split
+}
