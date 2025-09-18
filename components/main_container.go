@@ -60,8 +60,8 @@ func NewFullBody() *container.Split {
 		container.NewPadded(sendBtn),
 	)
 
-	split := container.NewVSplit(upper, output)
-	split.SetOffset(0.1)
+	fullBody := container.NewVSplit(upper, output)
+	fullBody.SetOffset(0.1)
 
-	return split
+	return fullBody
 }

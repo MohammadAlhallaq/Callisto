@@ -11,9 +11,9 @@ func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 
-	fullBody := components.NewFullBody()
+	mainHeaderTabs := components.NewMainHeaderTabs()
 
-	w.SetContent(fullBody)
+	w.SetContent(mainHeaderTabs)
 	w.Resize(fyne.NewSize(900, 600))
 	w.ShowAndRun()
 }
