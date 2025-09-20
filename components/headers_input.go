@@ -7,9 +7,20 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewHeadersEntry() *fyne.Container {
+type HeadersEntry struct {
+	Container     *fyne.Container
+	rowsContainer *fyne.Container
+	rows          []struct {
+		Key   *widget.Entry
+		Value *widget.Entry
+	}
+}
 
-	rowsContainer := container.NewVBox()
+func NewHeadersEntry() *HeadersEntry {
+	h := &HeadersEntry{
+		rowsContainer: container.NewVBox(),
+	}
+
 	addRow := func() {
 		var row *fyne.Container
 
@@ -20,8 +31,16 @@ func NewHeadersEntry() *fyne.Container {
 		valueEntry.SetPlaceHolder("Value")
 
 		removeBtn := widget.NewButton("x", func() {
-			rowsContainer.Remove(row)
-			rowsContainer.Refresh()
+			h.rowsContainer.Remove(row)
+
+			for i, r := range h.rows {
+				if r.Key == keyEntry && r.Value == valueEntry {
+					h.rows = append(h.rows[:i], h.rows[i+1:]...)
+					break
+				}
+			}
+
+			h.rowsContainer.Refresh()
 		})
 
 		fields := container.New(
@@ -34,17 +53,33 @@ func NewHeadersEntry() *fyne.Container {
 			fields,
 			removeBtn,
 		)
-		rowsContainer.Add(row)
-		rowsContainer.Refresh()
+		h.rowsContainer.Add(row)
+		h.rowsContainer.Refresh()
+
+		h.rows = append(h.rows, struct {
+			Key   *widget.Entry
+			Value *widget.Entry
+		}{keyEntry, valueEntry})
 	}
 
 	addBtn := widget.NewButton("+", func() {
 		addRow()
 	})
 
-	headersEntry := container.NewVBox(
-		rowsContainer,
+	h.Container = container.NewVBox(
+		h.rowsContainer,
 		addBtn,
 	)
-	return headersEntry
+	return h
+}
+
+func (h *HeadersEntry) GetHeaders() map[string]string {
+	headers := map[string]string{}
+
+	for _, r := range h.rows {
+		if r.Key.Text != "" {
+			headers[r.Key.Text] = r.Value.Text
+		}
+	}
+	return headers
 }

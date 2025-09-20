@@ -3,6 +3,7 @@ package components
 import (
 	"Callisto/network"
 	"fmt"
+	"go/printer"
 	"time"
 
 	"fyne.io/fyne/v2/container"
@@ -25,14 +26,12 @@ func NewFullBody() *container.Split {
 
 	tabs := container.NewAppTabs(
 		container.NewTabItem("Body", bodyEntry),
-		container.NewTabItem("Headers", headersEntry),
+		container.NewTabItem("Headers", headersEntry.Container),
 	)
 
 	sendBtn := widget.NewButton("Send Request", func() {
 		client := network.NewClient(10 * time.Second)
-		headers := map[string]string{
-			"Content-Type": "application/json",
-		}
+		headers := headersEntry.GetHeaders()
 		// Create request with body
 		result, err := client.Send(
 			HTTPMethods[selecty.SelectedIndex()],
