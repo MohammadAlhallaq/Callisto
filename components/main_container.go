@@ -3,7 +3,6 @@ package components
 import (
 	"Callisto/network"
 	"fmt"
-	"go/printer"
 	"time"
 
 	"fyne.io/fyne/v2/container"

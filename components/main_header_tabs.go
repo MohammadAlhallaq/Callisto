@@ -5,22 +5,23 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewMainHeaderTabs() *container.AppTabs {
+func NewMainHeaderTabs() *container.DocTabs {
 
-	addTab := container.NewTabItem("+", widget.NewLabel(""))
-	HeaderTabs := container.NewAppTabs(
+	HeaderTabs := container.NewDocTabs(
 		container.NewTabItem("New Request", NewFullBody()),
-		addTab,
 	)
 
-	HeaderTabs.OnSelected = func(ti *container.TabItem) {
-		if ti == addTab {
-			newTab := container.NewTabItem("New Request", NewFullBody())
-			items := HeaderTabs.Items
-			HeaderTabs.Items = append(items[:len(items)-1], newTab, addTab)
-			HeaderTabs.Select(newTab)
-		}
+	HeaderTabs.CreateTab = func() *container.TabItem {
+		return container.NewTabItem("New Tab", widget.NewLabel("New tab content"))
 	}
+	// HeaderTabs.OnSelected = func(ti *container.TabItem) {
+	// 	if ti == addTab {
+	// 		newTab := container.NewTabItem("New Request", NewFullBody())
+	// 		items := HeaderTabs.Items
+	// 		HeaderTabs.Items = append(items[:len(items)-1], newTab, addTab)
+	// 		HeaderTabs.Select(newTab)
+	// 	}
+	// }
 
 	return HeaderTabs
 }

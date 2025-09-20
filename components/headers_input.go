@@ -62,6 +62,9 @@ func NewHeadersEntry() *HeadersEntry {
 		}{keyEntry, valueEntry})
 	}
 
+	// PRE DEFINED JSON HEADER
+	addRow()
+
 	addBtn := widget.NewButton("+", func() {
 		addRow()
 	})

@@ -10,10 +10,8 @@ import (
 func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-
 	mainHeaderTabs := components.NewMainHeaderTabs()
-
 	w.SetContent(mainHeaderTabs)
-	w.Resize(fyne.NewSize(900, 600))
+	w.Resize(fyne.NewSize(1000, 700))
 	w.ShowAndRun()
 }
