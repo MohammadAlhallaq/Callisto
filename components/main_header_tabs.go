@@ -2,7 +2,6 @@ package components
 
 import (
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/widget"
 )
 
 func NewMainHeaderTabs() *container.DocTabs {
@@ -12,7 +11,7 @@ func NewMainHeaderTabs() *container.DocTabs {
 	)
 
 	HeaderTabs.CreateTab = func() *container.TabItem {
-		return container.NewTabItem("New Tab", widget.NewLabel("New tab content"))
+		return container.NewTabItem("New Tab", NewFullBody())
 	}
 	// HeaderTabs.OnSelected = func(ti *container.TabItem) {
 	// 	if ti == addTab {
