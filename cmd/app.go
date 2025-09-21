@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"Callisto/components"
-
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 )
