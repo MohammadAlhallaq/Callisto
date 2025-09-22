@@ -11,7 +11,7 @@ type HeadersEntry struct {
 	Container     *fyne.Container
 	rowsContainer *fyne.Container
 	rows          []struct {
-		Key   *widget.Entry
+		Key   *widget.SelectEntry
 		Value *widget.Entry
 	}
 }
@@ -20,11 +20,12 @@ func NewHeadersEntry() *HeadersEntry {
 	h := &HeadersEntry{
 		rowsContainer: container.NewVBox(),
 	}
+	options := []string{"Content-Type", "Authorization"}
 
 	addRow := func() {
 		var row *fyne.Container
 
-		keyEntry := widget.NewEntry()
+		keyEntry := widget.NewSelectEntry(options)
 		keyEntry.SetPlaceHolder("Key")
 
 		valueEntry := widget.NewEntry()
@@ -53,11 +54,12 @@ func NewHeadersEntry() *HeadersEntry {
 			fields,
 			removeBtn,
 		)
+		
 		h.rowsContainer.Add(row)
 		h.rowsContainer.Refresh()
 
 		h.rows = append(h.rows, struct {
-			Key   *widget.Entry
+			Key   *widget.SelectEntry
 			Value *widget.Entry
 		}{keyEntry, valueEntry})
 	}
