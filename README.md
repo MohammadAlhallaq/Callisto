@@ -25,5 +25,4 @@ Perfect for developers who want a fast, distraction-free alternative to heavy AP
 ## 🚀 Getting Started
 
 ### Prerequisites
-- [Go 1.22+](https://go.dev/dl/) installed  
-- Git installed  
+- [Go 1.22+](https://go.dev/dl/) installed
