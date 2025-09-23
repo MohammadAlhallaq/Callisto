@@ -44,6 +44,7 @@ func NewFullBody() *container.Split {
 		}
 		output.SetText(result)
 	})
+	sendBtn.Importance = widget.WarningImportance
 
 	hbox := container.New(
 		layout.NewBorderLayout(nil, nil, selecty, nil),
