@@ -28,7 +28,9 @@ func NewFullBody() *container.Split {
 		container.NewTabItem("Headers", headersEntry.Container),
 	)
 
-	sendBtn := widget.NewButton("Send Request", func() {
+	var sendBtn *widget.Button
+	sendBtn = widget.NewButton("Send Request", func() {
+		sendBtn.Hide()
 		client := network.NewClient(10 * time.Second)
 		headers := headersEntry.GetHeaders()
 		// Create request with body
@@ -38,6 +40,9 @@ func NewFullBody() *container.Split {
 			bodyEntry.Text,
 			headers,
 		)
+
+		sendBtn.Show()
+
 		if err != nil {
 			output.SetText(fmt.Sprintf("Error sending request: %v", err))
 			return
