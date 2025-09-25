@@ -15,7 +15,7 @@ func NewHelloPage(w fyne.Window) *fyne.Container {
 
 	legoImage := canvas.NewImageFromFile("./assets/callisto-logo.png")
 	legoImage.FillMode = canvas.ImageFillContain
-	legoImage.SetMinSize(fyne.NewSize(150, 150))
+	legoImage.SetMinSize(fyne.NewSize(400, 400))
 
 	// Buttons
 	loginBtn := widget.NewButton("Login", func() {
