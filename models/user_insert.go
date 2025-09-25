@@ -1,6 +1,5 @@
 package models
 
-type User struct {
-	ID    *int64 `json:"id"`
+type UserInsert struct {
 	Email string `json:"email"`
 }

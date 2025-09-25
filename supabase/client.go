@@ -16,7 +16,7 @@ func Init() {
 	}
 
 	url := os.Getenv("SUPABASE_URL")
-	key := os.Getenv("SUPABASE_KEY")
+	key := os.Getenv("SERVICE_ROLE")
 
 	var err error
 	Client, err = supabase.NewClient(url, key, nil)
