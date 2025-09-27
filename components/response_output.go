@@ -5,11 +5,19 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewResponseView() *widget.Entry {
-	// INITIALIZE RESPONSE WIDGET
-	output := widget.NewMultiLineEntry()
-	output.SetPlaceHolder("Respones will appear here...")
-	output.Disable()
-	output.Wrapping = fyne.TextWrapWord
-	return output
+type ReadOnlyMultiLineEntry struct {
+	*widget.Entry
 }
+
+func NewResponseView() *ReadOnlyMultiLineEntry {
+	e := &ReadOnlyMultiLineEntry{
+		Entry: widget.NewMultiLineEntry(),
+	}
+	e.Wrapping = fyne.TextWrapWord
+	e.SetPlaceHolder("Responses will appear here...")
+	return e
+}
+
+// Prevent typing
+func (e *ReadOnlyMultiLineEntry) TypedRune(r rune)            {}
+func (e *ReadOnlyMultiLineEntry) TypedKey(key *fyne.KeyEvent) {}
