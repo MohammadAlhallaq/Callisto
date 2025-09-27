@@ -11,7 +11,7 @@ type ReadOnlyMultiLineEntry struct {
 
 func NewResponseView() *ReadOnlyMultiLineEntry {
 	e := &ReadOnlyMultiLineEntry{
-		Entry: widget.NewMultiLineEntry(),
+		widget.NewMultiLineEntry(),
 	}
 	e.Wrapping = fyne.TextWrapWord
 	e.SetPlaceHolder("Responses will appear here...")
