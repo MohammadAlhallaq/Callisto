@@ -1,6 +1,8 @@
-package components
+package views
 
 import (
+	"Callisto/components"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -8,7 +10,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewHelloPage(w fyne.Window) *fyne.Container {
+func NewMainView(w fyne.Window) *fyne.Container {
 
 	welcomeLabel := widget.NewLabel("Welcome to Callisto")
 	welcomeLabel.Alignment = fyne.TextAlignCenter
@@ -25,7 +27,7 @@ func NewHelloPage(w fyne.Window) *fyne.Container {
 	})
 
 	guestBtn := widget.NewButton("Continue as Guest", func() {
-		mainHeaderTabs := NewMainHeaderTabs()
+		mainHeaderTabs := components.NewMainHeaderTabs()
 		w.SetContent(mainHeaderTabs)
 	})
 

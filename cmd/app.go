@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"Callisto/components"
+	"Callisto/views"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
@@ -10,7 +10,7 @@ import (
 func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-	content := components.NewHelloPage(w)
+	content := views.NewMainView(w)
 	w.SetContent(content)
 	w.Resize(fyne.NewSize(1200, 800))
 	w.ShowAndRun()
