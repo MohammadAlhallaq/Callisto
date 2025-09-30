@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-	
 	supabase.Init()
 	cmd.Excute()
 }

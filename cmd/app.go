@@ -10,7 +10,7 @@ import (
 func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-	content := views.NewMainView(w)
+	content := views.NewEntryView(w)
 	w.SetContent(content)
 	w.Resize(fyne.NewSize(1200, 800))
 	w.ShowAndRun()
