@@ -6,6 +6,7 @@ require (
 	fyne.io/fyne/v2 v2.6.3
 	github.com/joho/godotenv v1.5.1
 	github.com/supabase-community/supabase-go v0.0.4
+	golang.org/x/crypto v0.33.0
 )
 
 require (

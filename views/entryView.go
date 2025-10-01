@@ -19,11 +19,15 @@ func NewEntryView(w fyne.Window) *fyne.Container {
 
 	// Buttons
 	loginBtn := widget.NewButton("Login", func() {
-		signInForm := NewSignInForm()
+		prevPage := NewEntryView(w)
+		signInForm := NewSignInForm(w, prevPage)
 		w.SetContent(signInForm)
 	})
 
 	signupBtn := widget.NewButton("Sign Up", func() {
+		prevPage := NewEntryView(w)
+		signInForm := NewSignUpForm(w, prevPage)
+		w.SetContent(signInForm)
 	})
 
 	guestBtn := widget.NewButton("Continue as Guest", func() {

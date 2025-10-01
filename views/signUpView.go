@@ -12,7 +12,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewSignInForm(w fyne.Window, prevPage fyne.CanvasObject) *fyne.Container {
+func NewSignUpForm(w fyne.Window, prevPage fyne.CanvasObject) *fyne.Container {
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder("Enter your email")
 
@@ -39,7 +39,7 @@ func NewSignInForm(w fyne.Window, prevPage fyne.CanvasObject) *fyne.Container {
 
 	formBox := container.NewVBox(
 		layout.NewSpacer(),
-		container.NewCenter(widget.NewLabel("SignIn")),
+		container.NewCenter(widget.NewLabel("SignUp")),
 		form,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
