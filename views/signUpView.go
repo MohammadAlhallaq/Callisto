@@ -2,6 +2,7 @@ package views
 
 import (
 	"Callisto/models"
+	"Callisto/navigation"
 	"Callisto/repositories"
 	"Callisto/utils"
 	"log"
@@ -12,7 +13,7 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewSignUpForm(w fyne.Window, prevPage fyne.CanvasObject) *fyne.Container {
+func NewSignUpForm(w fyne.Window) *fyne.Container {
 	emailEntry := widget.NewEntry()
 	emailEntry.SetPlaceHolder("Enter your email")
 
@@ -33,7 +34,7 @@ func NewSignUpForm(w fyne.Window, prevPage fyne.CanvasObject) *fyne.Container {
 			}
 		},
 		OnCancel: func() {
-			w.SetContent(prevPage)
+			navigation.PopPage(w)
 		},
 	}
 

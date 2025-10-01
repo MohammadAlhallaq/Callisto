@@ -1,6 +1,8 @@
 package views
 
 import (
+	"Callisto/navigation"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/canvas"
 	"fyne.io/fyne/v2/container"
@@ -17,21 +19,21 @@ func NewEntryView(w fyne.Window) *fyne.Container {
 	legoImage.FillMode = canvas.ImageFillContain
 	legoImage.SetMinSize(fyne.NewSize(400, 400))
 
-	// Buttons
 	loginBtn := widget.NewButton("Login", func() {
-		prevPage := NewEntryView(w)
-		signInForm := NewSignInForm(w, prevPage)
-		w.SetContent(signInForm)
+		signInPage := NewSignInForm(w)
+		navigation.PushPage(w, signInPage)
+		w.SetContent(signInPage)
 	})
 
 	signupBtn := widget.NewButton("Sign Up", func() {
-		prevPage := NewEntryView(w)
-		signInForm := NewSignUpForm(w, prevPage)
-		w.SetContent(signInForm)
+		signUpPage := NewSignUpForm(w)
+		navigation.PushPage(w, signUpPage)
+		w.SetContent(signUpPage)
 	})
 
 	guestBtn := widget.NewButton("Continue as Guest", func() {
 		mainHeaderTabs := NewMainView()
+		navigation.PushPage(w, mainHeaderTabs)
 		w.SetContent(mainHeaderTabs)
 	})
 
@@ -50,5 +52,4 @@ func NewEntryView(w fyne.Window) *fyne.Container {
 		),
 	)
 	return content
-
 }
