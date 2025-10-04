@@ -3,19 +3,26 @@ package repositories
 import (
 	"Callisto/models"
 	"Callisto/supabase"
+	"encoding/json"
 	"fmt"
 )
 
-func AddUser(req models.User) error {
-	_, _, err := supabase.Client.
+func AddUser(req models.User) ([]models.User, error) {
+	res, _, err := supabase.Client.
 		From("users").
-		Insert(req, false, "", "*", "").
+		Insert(req, false, "", "representation", "").
 		Execute()
 
 	if err != nil {
-		return fmt.Errorf("failed to insert user: %w", err)
+		return nil, fmt.Errorf("failed to insert user: %w", err)
 	}
-	return nil
+
+	var users []models.User
+	if err := json.Unmarshal(res, &users); err != nil {
+		return nil, fmt.Errorf("failed to insert user: %w", err)
+	}
+
+	return users, nil
 }
 
 func GetUserByEmail(email string) (models.User, error) {

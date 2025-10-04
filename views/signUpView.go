@@ -6,7 +6,7 @@ import (
 	"Callisto/repositories"
 	"Callisto/services/auth"
 	"Callisto/services/validation"
-	"log"
+	"fmt"
 	"strings"
 
 	"fyne.io/fyne/v2"
@@ -63,7 +63,7 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 
 			hashedPassword, _ := auth.HashPassword(passwordEntry.Text)
 			user := models.User{Email: emailEntry.Text, Password: hashedPassword}
-			if err := repositories.AddUser(user); err != nil {
+			if _, err := repositories.AddUser(user); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
 				w.SetContent(NewMainView())
