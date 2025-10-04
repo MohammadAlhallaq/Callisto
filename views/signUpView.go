@@ -5,7 +5,9 @@ import (
 	"Callisto/navigation"
 	"Callisto/repositories"
 	"Callisto/services/auth"
+	"Callisto/services/validation"
 	"log"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -19,18 +21,52 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 
 	passwordEntry := widget.NewPasswordEntry()
 	passwordEntry.SetPlaceHolder("Enter your password")
+
+	titleLabel := widget.NewLabel("SignUp")
+	titleLabel.Alignment = fyne.TextAlignCenter
+	titleLabel.TextStyle = fyne.TextStyle{Bold: true}
+
+	// Label to show validation errors
+	errorLabel := widget.NewLabel("")
+	errorLabel.Wrapping = fyne.TextWrapWord
+	errorLabel.Alignment = fyne.TextAlignCenter
+	errorLabel.TextStyle = fyne.TextStyle{Bold: true}
+
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{Text: "Email", Widget: emailEntry},
 			{Text: "Password", Widget: passwordEntry},
 		},
 		OnSubmit: func() {
+			errorLabel.SetText("")
+
+			email := strings.TrimSpace(emailEntry.Text)
+			password := strings.TrimSpace(passwordEntry.Text)
+
+			// Validation rules
+			if email == "" {
+				errorLabel.SetText("Email cannot be empty")
+				return
+			}
+			if !validation.IsValidEmail(email) {
+				errorLabel.SetText("Invalid email format")
+				return
+			}
+			if password == "" {
+				errorLabel.SetText("Password cannot be empty")
+				return
+			}
+			if len(password) < 6 {
+				errorLabel.SetText("Password must be at least 6 characters")
+				return
+			}
+
 			hashedPassword, _ := auth.HashPassword(passwordEntry.Text)
 			user := models.User{Email: emailEntry.Text, Password: hashedPassword}
 			if err := repositories.AddUser(user); err != nil {
-				log.Println("Could not create user:", err)
+				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
-				log.Println("User created successfully")
+				w.SetContent(NewMainView())
 			}
 		},
 		OnCancel: func() {
@@ -40,8 +76,8 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 
 	formBox := container.NewVBox(
 		layout.NewSpacer(),
-		container.NewCenter(widget.NewLabel("SignUp")),
 		form,
+		errorLabel,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 	)
