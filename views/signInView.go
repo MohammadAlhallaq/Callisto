@@ -1,11 +1,11 @@
 package views
 
 import (
-	"Callisto/models"
 	"Callisto/navigation"
-	"Callisto/repositories"
-	"Callisto/utils"
+	services "Callisto/services/auth"
+	"Callisto/services/validation"
 	"log"
+	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -19,18 +19,51 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 
 	passwordEntry := widget.NewPasswordEntry()
 	passwordEntry.SetPlaceHolder("Enter your password")
+
+	titleLabel := widget.NewLabel("Sign In")
+	titleLabel.Alignment = fyne.TextAlignCenter
+	titleLabel.TextStyle = fyne.TextStyle{Bold: true}
+
+	// Label to show validation errors
+	errorLabel := widget.NewLabel("")
+	errorLabel.Wrapping = fyne.TextWrapWord
+	errorLabel.Alignment = fyne.TextAlignCenter
+	errorLabel.TextStyle = fyne.TextStyle{Bold: true}
+
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{Text: "Email", Widget: emailEntry},
 			{Text: "Password", Widget: passwordEntry},
 		},
 		OnSubmit: func() {
-			hashedPassword, _ := utils.HashPassword(passwordEntry.Text)
-			user := models.UserInsert{Email: emailEntry.Text, Password: hashedPassword}
-			if err := repositories.AddUser(user); err != nil {
-				log.Println("Could not create user:", err)
+			errorLabel.SetText("")
+
+			email := strings.TrimSpace(emailEntry.Text)
+			password := strings.TrimSpace(passwordEntry.Text)
+
+			// Validation rules
+			if email == "" {
+				errorLabel.SetText("Email cannot be empty")
+				return
+			}
+			if !validation.IsValidEmail(email) {
+				errorLabel.SetText("Invalid email format")
+				return
+			}
+			if password == "" {
+				errorLabel.SetText("Password cannot be empty")
+				return
+			}
+			if len(password) < 6 {
+				errorLabel.SetText("Password must be at least 6 characters")
+				return
+			}
+
+			if _, err := services.Login(email, password); err != nil {
+				errorLabel.SetText("Login failed: " + err.Error())
+				log.Println(err)
 			} else {
-				log.Println("User created successfully")
+				log.Println("User found successfully")
 			}
 		},
 		OnCancel: func() {
@@ -40,8 +73,9 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 
 	formBox := container.NewVBox(
 		layout.NewSpacer(),
-		container.NewCenter(widget.NewLabel("SignIn")),
+		titleLabel,
 		form,
+		errorLabel,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 	)
