@@ -4,7 +4,7 @@ import (
 	"Callisto/models"
 	"Callisto/navigation"
 	"Callisto/repositories"
-	"Callisto/utils"
+	"Callisto/services/auth"
 	"log"
 
 	"fyne.io/fyne/v2"
@@ -25,8 +25,8 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 			{Text: "Password", Widget: passwordEntry},
 		},
 		OnSubmit: func() {
-			hashedPassword, _ := utils.HashPassword(passwordEntry.Text)
-			user := models.UserInsert{Email: emailEntry.Text, Password: hashedPassword}
+			hashedPassword, _ := auth.HashPassword(passwordEntry.Text)
+			user := models.User{Email: emailEntry.Text, Password: hashedPassword}
 			if err := repositories.AddUser(user); err != nil {
 				log.Println("Could not create user:", err)
 			} else {
