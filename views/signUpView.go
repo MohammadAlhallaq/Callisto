@@ -3,9 +3,9 @@ package views
 import (
 	"Callisto/models"
 	"Callisto/navigation"
-	"Callisto/repositories"
-	"Callisto/services/auth"
+	auth "Callisto/services"
 	"Callisto/services/validation"
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -61,11 +61,15 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 				return
 			}
 
-			hashedPassword, _ := auth.HashPassword(passwordEntry.Text)
-			user := models.User{Email: emailEntry.Text, Password: hashedPassword}
-			if _, err := repositories.AddUser(user); err != nil {
+			user := models.User{Email: emailEntry.Text, Password: passwordEntry.Text}
+			if session, err := auth.SignUpWithEmail(user.Email, user.Password); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
+				_, err := json.MarshalIndent(session.User, "", "  ")
+				if err != nil {
+					fmt.Println("Error marshalling user:", err)
+					return
+				}
 				w.SetContent(NewMainView())
 			}
 		},
