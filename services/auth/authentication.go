@@ -31,7 +31,7 @@ func SignUpWithEmail(email, password string) (*types.SignupResponse, error) {
 
 func getSessionFilePath() string {
 	dir, _ := os.UserConfigDir() // cross-platform config dir
-	return filepath.Join(dir, "callisto_session.json")
+	return filepath.Join(dir, "callisto-session.json")
 }
 
 func SaveSessionData(session types.Session) error {
