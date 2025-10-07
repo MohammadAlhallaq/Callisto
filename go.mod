@@ -5,8 +5,8 @@ go 1.25.1
 require (
 	fyne.io/fyne/v2 v2.6.3
 	github.com/joho/godotenv v1.5.1
+	github.com/supabase-community/gotrue-go v1.2.0
 	github.com/supabase-community/supabase-go v0.0.4
-	golang.org/x/crypto v0.33.0
 )
 
 require (
@@ -39,7 +39,6 @@ require (
 	github.com/srwiley/rasterx v0.0.0-20220730225603-2ab79fcdd4ef // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/supabase-community/functions-go v0.0.0-20220927045802-22373e6cb51d // indirect
-	github.com/supabase-community/gotrue-go v1.2.0 // indirect
 	github.com/supabase-community/postgrest-go v0.0.11 // indirect
 	github.com/supabase-community/storage-go v0.7.0 // indirect
 	github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80 // indirect

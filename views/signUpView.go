@@ -3,8 +3,9 @@ package views
 import (
 	"Callisto/models"
 	"Callisto/navigation"
-	auth "Callisto/services"
+	"Callisto/services/auth"
 	"Callisto/services/validation"
+
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -60,16 +61,10 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 				errorLabel.SetText("Password must be at least 6 characters")
 				return
 			}
-
 			user := models.User{Email: emailEntry.Text, Password: passwordEntry.Text}
-			if session, err := auth.SignUpWithEmail(user.Email, user.Password); err != nil {
+			if _, err := auth.SignUpWithEmail(user.Email, user.Password); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
-				_, err := json.MarshalIndent(session.User, "", "  ")
-				if err != nil {
-					fmt.Println("Error marshalling user:", err)
-					return
-				}
 				w.SetContent(NewMainView())
 			}
 		},
