@@ -4,7 +4,6 @@ import (
 	"Callisto/navigation"
 	"Callisto/services/auth"
 	"Callisto/services/validation"
-	"fmt"
 	"log"
 	"strings"
 
@@ -62,8 +61,6 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 
 			if session, err := auth.SignInWithEmailPassword(email, password); err != nil {
 				errorLabel.SetText("Login failed: " + err.Error())
-				fmt.Println(session.User)
-				log.Println(err)
 			} else {
 				auth.SaveSessionData(session)
 				log.Println("User found successfully")

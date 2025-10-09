@@ -1,13 +1,17 @@
 package auth
 
 import (
+	"Callisto/models"
 	"Callisto/supabase"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/supabase-community/gotrue-go/types"
 )
+
+var User *models.User
 
 func SignInWithEmailPassword(email, password string) (types.Session, error) {
 	session, err := supabase.Client.SignInWithEmailPassword(email, password)
@@ -49,7 +53,7 @@ func SaveSessionData(session types.Session) error {
 	return json.NewEncoder(file).Encode(data)
 }
 
-func LoadSession() (*authData, error) {
+func loadSession() (*authData, error) {
 
 	file, err := os.Open(getSessionFilePath())
 	if err != nil {
@@ -60,4 +64,28 @@ func LoadSession() (*authData, error) {
 	var data authData
 	err = json.NewDecoder(file).Decode(&data)
 	return &data, err
+}
+
+func FetchLoggedInUser() (*models.User, error) {
+	authData, err := loadSession()
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := supabase.Client.Auth.RefreshToken(authData.RefreshToken)
+	if err != nil {
+		return nil, fmt.Errorf("failed to refresh token: %w", err)
+	}
+
+	session, err := supabase.Client.Auth.WithToken(res.AccessToken).GetUser()
+	supabase.Client.EnableTokenAutoRefresh(res.Session)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get user: %w", err)
+	}
+
+	User := &models.User{
+		ID:    session.User.ID,
+		Email: session.User.Email,
+	}
+	return User, nil
 }

@@ -5,8 +5,9 @@ import (
 	"Callisto/navigation"
 	"Callisto/services/auth"
 	"Callisto/services/validation"
+	"encoding/json"
+	"log"
 
-	"fmt"
 	"strings"
 
 	"fyne.io/fyne/v2"
@@ -65,6 +66,8 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 			if session, err := auth.SignUpWithEmail(user.Email, user.Password); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
+				b, _ := json.MarshalIndent(session.Session, "", "  ")
+				log.Println(string(b))
 				auth.SaveSessionData(session.Session)
 				w.SetContent(NewMainView())
 			}
