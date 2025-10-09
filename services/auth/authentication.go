@@ -21,10 +21,10 @@ func SignInWithEmailPassword(email, password string) (types.Session, error) {
 	return session, nil
 }
 
-func SignUpWithEmail(email, password string) (*types.SignupResponse, error) {
+func SignUpWithEmail(user models.User) (*types.SignupResponse, error) {
 	req := types.SignupRequest{
-		Email:    email,
-		Password: password,
+		Email:    user.Email,
+		Password: user.Password,
 	}
 	session, err := supabase.Client.Auth.Signup(req)
 	if err != nil {

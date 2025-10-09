@@ -7,5 +7,11 @@ import (
 )
 
 func NewMainView() *container.DocTabs {
-	return components.NewMainHeaderTabs()
+	HeaderTabs := container.NewDocTabs(
+		container.NewTabItem("New Request", components.NewFullBody()),
+	)
+	HeaderTabs.CreateTab = func() *container.TabItem {
+		return container.NewTabItem("New Request", components.NewFullBody())
+	}
+	return HeaderTabs
 }

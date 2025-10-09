@@ -4,7 +4,6 @@ import (
 	"Callisto/navigation"
 	"Callisto/services/auth"
 	"Callisto/services/validation"
-	"log"
 	"strings"
 
 	"fyne.io/fyne/v2"
@@ -58,12 +57,11 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 				errorLabel.SetText("Password must be at least 6 characters")
 				return
 			}
-
 			if session, err := auth.SignInWithEmailPassword(email, password); err != nil {
 				errorLabel.SetText("Login failed: " + err.Error())
 			} else {
 				auth.SaveSessionData(session)
-				log.Println("User found successfully")
+				w.SetContent(NewMainView())
 			}
 		},
 		OnCancel: func() {

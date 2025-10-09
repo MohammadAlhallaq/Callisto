@@ -12,9 +12,7 @@ func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 	content := views.NewEntryView(w)
-
 	navigation.PushPage(w, content)
-	
 	w.SetContent(content)
 	w.Resize(fyne.NewSize(1200, 800))
 	w.ShowAndRun()
