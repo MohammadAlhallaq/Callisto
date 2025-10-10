@@ -60,10 +60,9 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 				return
 			}
 			user := models.User{Email: emailEntry.Text, Password: passwordEntry.Text}
-			if session, err := auth.SignUpWithEmail(user); err != nil {
+			if _, err := auth.SignUpWithEmail(user); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
-				auth.SaveSessionData(session.Session)
 				w.SetContent(NewMainView())
 			}
 		},

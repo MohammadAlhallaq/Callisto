@@ -13,24 +13,40 @@ import (
 
 var User *models.User
 
-func SignInWithEmailPassword(email, password string) (types.Session, error) {
+func SignInWithEmailPassword(email, password string) (*models.User, error) {
 	session, err := supabase.Client.SignInWithEmailPassword(email, password)
 	if err != nil {
-		return types.Session{}, err
+		return nil, err
 	}
-	return session, nil
+
+	saveSessionData(session)
+
+	User := &models.User{
+		ID:        session.User.ID,
+		Email:     session.User.Email,
+		CreatedAt: session.User.CreatedAt,
+	}
+	return User, nil
 }
 
-func SignUpWithEmail(user models.User) (*types.SignupResponse, error) {
+func SignUpWithEmail(user models.User) (*models.User, error) {
 	req := types.SignupRequest{
 		Email:    user.Email,
 		Password: user.Password,
 	}
 	session, err := supabase.Client.Auth.Signup(req)
 	if err != nil {
-		return &types.SignupResponse{}, err
+		return nil, err
 	}
-	return session, nil
+
+	saveSessionData(session.Session)
+
+	User := &models.User{
+		ID:        session.User.ID,
+		Email:     session.User.Email,
+		CreatedAt: session.User.CreatedAt,
+	}
+	return User, nil
 }
 
 func getSessionFilePath() string {
@@ -38,7 +54,7 @@ func getSessionFilePath() string {
 	return filepath.Join(dir, "callisto-session.json")
 }
 
-func SaveSessionData(session types.Session) error {
+func saveSessionData(session types.Session) error {
 	data := authData{
 		RefreshToken: session.RefreshToken,
 		ExpiresAt:    session.ExpiresAt,
@@ -66,26 +82,27 @@ func loadSession() (*authData, error) {
 	return &data, err
 }
 
-func FetchLoggedInUser() (*models.User, error) {
+func FetchLoggedInUser() error {
 	authData, err := loadSession()
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	res, err := supabase.Client.Auth.RefreshToken(authData.RefreshToken)
 	if err != nil {
-		return nil, fmt.Errorf("failed to refresh token: %w", err)
+		return fmt.Errorf("failed to refresh token: %w", err)
 	}
 
 	session, err := supabase.Client.Auth.WithToken(res.AccessToken).GetUser()
 	supabase.Client.EnableTokenAutoRefresh(res.Session)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get user: %w", err)
+		return fmt.Errorf("failed to get user: %w", err)
 	}
 
-	User := &models.User{
-		ID:    session.User.ID,
-		Email: session.User.Email,
+	User = &models.User{
+		ID:        session.User.ID,
+		Email:     session.User.Email,
+		CreatedAt: session.User.CreatedAt,
 	}
-	return User, nil
+	return nil
 }
