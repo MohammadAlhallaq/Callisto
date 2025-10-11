@@ -32,7 +32,7 @@ func NewEntryView(w fyne.Window) *fyne.Container {
 	})
 
 	guestBtn := widget.NewButton("Continue as Guest", func() {
-		mainHeaderTabs := NewMainView()
+		mainHeaderTabs := NewMainView(w)
 		navigation.PushPage(w, mainHeaderTabs)
 		w.SetContent(mainHeaderTabs)
 	})

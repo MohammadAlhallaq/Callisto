@@ -60,7 +60,7 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 			if _, err := auth.SignInWithEmailPassword(email, password); err != nil {
 				errorLabel.SetText("Login failed: " + err.Error())
 			} else {
-				w.SetContent(NewMainView())
+				w.SetContent(NewMainView(w))
 			}
 		},
 		OnCancel: func() {

@@ -63,7 +63,7 @@ func NewSignUpForm(w fyne.Window) *fyne.Container {
 			if _, err := auth.SignUpWithEmail(user); err != nil {
 				errorLabel.SetText("Signup failed: " + err.Error())
 			} else {
-				w.SetContent(NewMainView())
+				w.SetContent(NewMainView(w))
 			}
 		},
 		OnCancel: func() {

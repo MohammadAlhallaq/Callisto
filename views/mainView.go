@@ -8,9 +8,9 @@ import (
 	"fyne.io/fyne/v2/layout"
 )
 
-func NewMainView() *fyne.Container {
+func NewMainView(w fyne.Window) *fyne.Container {
 
-	accountBar := components.NewAccountBar()
+	accountBar := components.NewAccountBar(w)
 
 	HeaderTabs := container.NewDocTabs(
 		container.NewTabItem("New Request", components.NewFullBody()),
