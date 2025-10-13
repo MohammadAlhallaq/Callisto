@@ -57,7 +57,7 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 				errorLabel.SetText("Password must be at least 6 characters")
 				return
 			}
-			if _, err := auth.SignInWithEmailPassword(email, password); err != nil {
+			if err := auth.SignInWithEmailPassword(email, password); err != nil {
 				errorLabel.SetText("Login failed: " + err.Error())
 			} else {
 				w.SetContent(NewMainView(w))
