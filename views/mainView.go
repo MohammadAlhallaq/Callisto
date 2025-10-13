@@ -11,7 +11,6 @@ import (
 func NewMainView(w fyne.Window) *fyne.Container {
 
 	accountBar := components.NewAccountBar(w)
-
 	
 	HeaderTabs := container.NewDocTabs(
 		container.NewTabItem("New Request", components.NewFullBody()),

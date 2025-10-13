@@ -1,6 +1,7 @@
 package components
 
 import (
+	"Callisto/navigation"
 	"Callisto/services/auth"
 	"fmt"
 
@@ -14,8 +15,8 @@ func NewAccountBar(w fyne.Window) *fyne.Container {
 	if auth.User != nil {
 		var button *widget.Button
 		logout := fyne.NewMenuItem("lotgout", func() {
-			fmt.Println("logout")
 			auth.Logout()
+			navigation.PopPage(w)
 		})
 
 		menu := fyne.NewMenu("", logout)
