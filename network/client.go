@@ -33,8 +33,10 @@ func (c *Client) Send(method, url, body string, headers map[string]string) (stri
 
 	b, _ := io.ReadAll(resp.Body)
 	var pretty bytes.Buffer
-	if err := json.Indent(&pretty, b, "", "  "); err != nil {
-		return resp.Status + "\n\n" + string(b), nil
+	if json.Valid(b) {
+		if err := json.Indent(&pretty, b, "", ""); err == nil {
+			return resp.Status + "\n\n" + pretty.String(), nil
+		}
 	}
 	return resp.Status + "\n\n" + pretty.String(), nil
 }
