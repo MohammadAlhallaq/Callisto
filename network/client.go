@@ -38,5 +38,5 @@ func (c *Client) Send(method, url, body string, headers map[string]string) (stri
 			return resp.Status + "\n\n" + pretty.String(), nil
 		}
 	}
-	return resp.Status + "\n\n" + pretty.String(), nil
+	return resp.Status + "\n\n" + string(b), nil
 }
