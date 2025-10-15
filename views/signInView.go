@@ -4,10 +4,12 @@ import (
 	"Callisto/navigation"
 	"Callisto/services/auth"
 	"Callisto/services/validation"
+	"fmt"
 	"strings"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
@@ -23,42 +25,35 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 	titleLabel.Alignment = fyne.TextAlignCenter
 	titleLabel.TextStyle = fyne.TextStyle{Bold: true}
 
-	// Label to show validation errors
-	errorLabel := widget.NewLabel("")
-	errorLabel.Wrapping = fyne.TextWrapWord
-	errorLabel.Alignment = fyne.TextAlignCenter
-	errorLabel.TextStyle = fyne.TextStyle{Bold: true}
-
 	form := &widget.Form{
 		Items: []*widget.FormItem{
 			{Text: "Email", Widget: emailEntry},
 			{Text: "Password", Widget: passwordEntry},
 		},
 		OnSubmit: func() {
-			errorLabel.SetText("")
 
 			email := strings.TrimSpace(emailEntry.Text)
 			password := strings.TrimSpace(passwordEntry.Text)
 
 			// Validation rules
 			if email == "" {
-				errorLabel.SetText("Email cannot be empty")
+				dialog.ShowError(fmt.Errorf("email cannot be empty"), w)
 				return
 			}
 			if !validation.IsValidEmail(email) {
-				errorLabel.SetText("Invalid email format")
+				dialog.ShowError(fmt.Errorf("invalid email format"), w)
 				return
 			}
 			if password == "" {
-				errorLabel.SetText("Password cannot be empty")
+				dialog.ShowError(fmt.Errorf("password cannot be empty"), w)
 				return
 			}
 			if len(password) < 6 {
-				errorLabel.SetText("Password must be at least 6 characters")
+				dialog.ShowError(fmt.Errorf("password must be at least 6 characters"), w)
 				return
 			}
 			if err := auth.SignInWithEmailPassword(email, password); err != nil {
-				errorLabel.SetText("Login failed: " + err.Error())
+				dialog.ShowError(fmt.Errorf("login failed: %v", err), w)
 			} else {
 				w.SetContent(NewMainView(w))
 			}
@@ -72,7 +67,6 @@ func NewSignInForm(w fyne.Window) *fyne.Container {
 		layout.NewSpacer(),
 		titleLabel,
 		form,
-		errorLabel,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 	)
