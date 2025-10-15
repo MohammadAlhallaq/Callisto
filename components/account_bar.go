@@ -3,7 +3,6 @@ package components
 import (
 	"Callisto/navigation"
 	"Callisto/services/auth"
-	"fmt"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
