@@ -10,8 +10,7 @@ import (
 
 func NewMainView(w fyne.Window) *fyne.Container {
 
-	accountBar := components.NewAccountBar(w)
-
+	accountBar := components.NewAccountBar(w, NewSignInForm(w), NewSignInForm(w))
 	HeaderTabs := container.NewDocTabs(
 		container.NewTabItem("New Request", components.NewFullBody()),
 	)

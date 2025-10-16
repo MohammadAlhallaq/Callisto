@@ -10,10 +10,12 @@ import (
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewAccountBar(w fyne.Window) *fyne.Container {
+func NewAccountBar(w fyne.Window, singinView, signupView *fyne.Container) *fyne.Container {
+
+	var button *widget.Button
+
 	if auth.User != nil {
-		var button *widget.Button
-		logout := fyne.NewMenuItem("lotgout", func() {
+		logout := fyne.NewMenuItem("Lotgout", func() {
 			auth.Logout()
 			navigation.PopPage(w)
 		})
@@ -24,11 +26,24 @@ func NewAccountBar(w fyne.Window) *fyne.Container {
 			popUp.ShowAtPosition(button.Position().Add(fyne.NewPos(0, button.Size().Height)))
 		})
 
-		return container.New(
-			layout.NewHBoxLayout(),
-			layout.NewSpacer(),
-			button,
-		)
+	} else {
+		signin := fyne.NewMenuItem("Signin", func() {
+			w.SetContent(singinView)
+		})
+		signup := fyne.NewMenuItem("Signup", func() {
+			w.SetContent(signupView)
+		})
+
+		menu := fyne.NewMenu("", signin, signup)
+		button = widget.NewButton("Options", func() {
+			popUp := widget.NewPopUpMenu(menu, w.Canvas())
+			popUp.ShowAtPosition(button.Position().Add(fyne.NewPos(0, button.Size().Height)))
+		})
 	}
-	return container.New(layout.NewHBoxLayout())
+
+	return container.New(
+		layout.NewHBoxLayout(),
+		layout.NewSpacer(),
+		button,
+	)
 }

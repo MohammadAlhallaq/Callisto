@@ -134,5 +134,7 @@ func Logout() error {
 	if err != nil {
 		return err
 	}
+	User = nil
+
 	return nil
 }

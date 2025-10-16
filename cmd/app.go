@@ -13,7 +13,7 @@ func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 	var content *fyne.Container
-
+	// TODO: logout is not redirecting, review composition, have edefault headers
 	if auth.User != nil {
 		content = views.NewMainView(w)
 	} else {
