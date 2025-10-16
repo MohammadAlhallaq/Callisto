@@ -12,16 +12,20 @@ import (
 func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-	var content *fyne.Container
+	// var content *fyne.Container
 	// TODO: logout is not redirecting, review composition, have edefault headers
-	if auth.User != nil {
-		content = views.NewMainView(w)
-	} else {
-		content = views.NewEntryView(w)
-	}
 
-	navigation.PushPage(w, content)
-	w.SetContent(content)
+	mainPage := views.NewMainView(w)
+	entryPage := views.NewEntryView(w)
+
+	if auth.User != nil {
+		w.SetContent(mainPage)
+		navigation.PushPage(w, entryPage)
+		navigation.PushPage(w, mainPage)
+	} else {
+		w.SetContent(entryPage)
+		navigation.PushPage(w, entryPage)
+	}
 	w.Resize(fyne.NewSize(1200, 800))
 	w.ShowAndRun()
 }
