@@ -6,9 +6,11 @@ import (
 
 var pageStack []fyne.CanvasObject
 
-func PushPage(w fyne.Window, page fyne.CanvasObject) {
-	pageStack = append(pageStack, page)
-	w.SetContent(page)
+func PushPage(w fyne.Window, pages ...fyne.CanvasObject) {
+	for _, page := range pages {
+		pageStack = append(pageStack, page)
+		w.SetContent(page)
+	}
 }
 
 func PopPage(w fyne.Window) {

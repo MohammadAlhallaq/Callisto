@@ -20,8 +20,7 @@ func Excute() {
 
 	if auth.User != nil {
 		w.SetContent(mainPage)
-		navigation.PushPage(w, entryPage)
-		navigation.PushPage(w, mainPage)
+		navigation.PushPage(w, entryPage, mainPage)
 	} else {
 		w.SetContent(entryPage)
 		navigation.PushPage(w, entryPage)
