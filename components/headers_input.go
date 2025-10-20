@@ -20,8 +20,13 @@ func NewHeadersEntry() *HeadersEntry {
 	h := &HeadersEntry{
 		rowsContainer: container.NewVBox(),
 	}
-	options := []string{"Content-Type", "Authorization"}
 
+	defaultHeaders := []map[string]string{
+		{"Content-Type": "application/json"},
+		{"Accept": "application/json"},
+	}
+
+	options := []string{"Authorization"}
 	addRow := func() {
 		var row *fyne.Container
 
@@ -54,7 +59,7 @@ func NewHeadersEntry() *HeadersEntry {
 			fields,
 			removeBtn,
 		)
-		
+
 		h.rowsContainer.Add(row)
 		h.rowsContainer.Refresh()
 
@@ -64,12 +69,40 @@ func NewHeadersEntry() *HeadersEntry {
 		}{keyEntry, valueEntry})
 	}
 
-	// PRE DEFINED JSON HEADER
-	addRow()
-
 	addBtn := widget.NewButton("+", func() {
 		addRow()
 	})
+
+	for _, dh := range defaultHeaders {
+		for k, v := range dh {
+			key := widget.NewSelectEntry(options)
+			key.SetText(k)
+			key.Disable()
+
+			val := widget.NewEntry()
+			val.SetText(v)
+			val.Disable()
+
+			row := container.New(
+				layout.NewGridLayout(2),
+				key,
+				val,
+			)
+
+			h.rowsContainer.Add(row)
+			h.rowsContainer.Refresh()
+
+			// Store references to the widgets for later use
+			fHeader := struct {
+				Key   *widget.SelectEntry
+				Value *widget.Entry
+			}{
+				Key:   key,
+				Value: val,
+			}
+			h.rows = append(h.rows, fHeader)
+		}
+	}
 
 	h.Container = container.NewVBox(
 		h.rowsContainer,
