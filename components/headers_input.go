@@ -92,15 +92,14 @@ func NewHeadersEntry() *HeadersEntry {
 			h.rowsContainer.Add(row)
 			h.rowsContainer.Refresh()
 
-			// Store references to the widgets for later use
-			fHeader := struct {
+			dHeader := struct {
 				Key   *widget.SelectEntry
 				Value *widget.Entry
 			}{
 				Key:   key,
 				Value: val,
 			}
-			h.rows = append(h.rows, fHeader)
+			h.rows = append(h.rows, dHeader)
 		}
 	}
 
