@@ -110,7 +110,7 @@ func NewHeadersEntry() *HeadersEntry {
 	return h
 }
 
-func (h *HeadersEntry) GetHeaders() map[string]string {
+func (h *HeadersEntry) GetBody() map[string]string {
 	headers := map[string]string{}
 
 	for _, r := range h.rows {

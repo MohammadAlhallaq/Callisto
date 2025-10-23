@@ -37,7 +37,7 @@ func NewFullBody() *container.Split {
 		result, err := client.Send(
 			HTTPMethods[selecty.SelectedIndex()],
 			urlEntry.Text,
-			bodyEntry.Text,
+			// bodyEntry.GetBody(),
 			headers,
 		)
 
