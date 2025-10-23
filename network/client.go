@@ -17,7 +17,7 @@ func NewClient(timeout time.Duration) *Client {
 	return &Client{http: &http.Client{Timeout: timeout}}
 }
 
-func (c *Client) Send(method, url, body string, headers map[string]string) (string, error) {
+func (c *Client) Send(method, url string, body string, headers map[string]string) (string, error) {
 	req, err := http.NewRequest(method, url, bytes.NewBuffer([]byte(body)))
 	if err != nil {
 		return "", err

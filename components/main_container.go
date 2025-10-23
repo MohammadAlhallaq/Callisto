@@ -24,7 +24,7 @@ func NewFullBody() *container.Split {
 	headersEntry := NewHeadersEntry()
 
 	tabs := container.NewAppTabs(
-		container.NewTabItem("Body", bodyEntry),
+		container.NewTabItem("Body", bodyEntry.Container),
 		container.NewTabItem("Headers", headersEntry.Container),
 	)
 
@@ -37,7 +37,7 @@ func NewFullBody() *container.Split {
 		result, err := client.Send(
 			HTTPMethods[selecty.SelectedIndex()],
 			urlEntry.Text,
-			// bodyEntry.GetBody(),
+			"adsads",
 			headers,
 		)
 
