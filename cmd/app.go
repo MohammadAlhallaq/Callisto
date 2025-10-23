@@ -12,9 +12,6 @@ import (
 func Excute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-	// var content *fyne.Container
-	// TODO: logout is not redirecting, review composition, have edefault headers
-
 	mainPage := views.NewMainView(w)
 	entryPage := views.NewEntryView(w)
 
