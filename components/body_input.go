@@ -1,6 +1,9 @@
 package components
 
 import (
+	"encoding/json"
+	"errors"
+
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
@@ -99,4 +102,19 @@ func (b *BodyEntry) GetFormData() map[string]string {
 		}
 	}
 	return formData
+}
+
+func (b *BodyEntry) GetRawData() (string, error) {
+	data := b.rawEntry.Text
+
+	if data == "" {
+		return "", errors.New("body is empty")
+	}
+
+	var js interface{}
+	if err := json.Unmarshal([]byte(data), &js); err != nil {
+		return "", errors.New("invalid JSON: " + err.Error())
+	}
+
+	return data, nil
 }
