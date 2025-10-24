@@ -45,23 +45,12 @@ func NewHeadersEntry() *HeadersEntry {
 					break
 				}
 			}
-
-			h.rowsContainer.Refresh()
 		})
 
-		fields := container.New(
-			layout.NewGridLayout(2),
-			keyEntry,
-			valueEntry,
-		)
-
-		row = container.New(layout.NewBorderLayout(nil, nil, nil, removeBtn),
-			fields,
-			removeBtn,
-		)
+		fields := container.New(layout.NewGridLayout(2), keyEntry, valueEntry)
+		row = container.New(layout.NewBorderLayout(nil, nil, nil, removeBtn), fields, removeBtn)
 
 		h.rowsContainer.Add(row)
-		h.rowsContainer.Refresh()
 
 		h.rows = append(h.rows, struct {
 			Key   *widget.SelectEntry
@@ -90,7 +79,6 @@ func NewHeadersEntry() *HeadersEntry {
 			)
 
 			h.rowsContainer.Add(row)
-			h.rowsContainer.Refresh()
 
 			dHeader := struct {
 				Key   *widget.SelectEntry

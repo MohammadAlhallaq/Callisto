@@ -52,22 +52,33 @@ func (b *BodyEntry) switchMode(mode string) {
 	b.Container.Add(b.radio)
 
 	addRow := func() {
+		var row *fyne.Container
+
 		key := widget.NewEntry()
 		key.SetPlaceHolder("Key")
 
 		value := widget.NewEntry()
 		value.SetPlaceHolder("Value")
 
-		fields := container.New(
-			layout.NewGridLayout(2),
-			key,
-			value,
-		)
-		row := container.New(layout.NewBorderLayout(nil, nil, nil, nil),
-			fields,
-		)
+		removeBtn := widget.NewButton("X", func() {
+			b.rowsContainer.Remove(row)
+			for i, k := range b.rows {
+				if k.Key == key && k.Value == value {
+					b.rows = append(b.rows[:i], b.rows[i:]...)
+					break
+				}
+			}
+		})
+
+		fields := container.New(layout.NewGridLayout(2), key, value)
+		row = container.New(layout.NewBorderLayout(nil, nil, nil, removeBtn), fields, removeBtn)
 
 		b.rowsContainer.Add(row)
+
+		b.rows = append(b.rows, struct {
+			Key   *widget.Entry
+			Value *widget.Entry
+		}{key, value})
 	}
 
 	if mode == "raw" {
@@ -79,13 +90,13 @@ func (b *BodyEntry) switchMode(mode string) {
 	}
 }
 
-func (b *BodyEntry) GetHeaders() map[string]string {
-	headers := map[string]string{}
+func (b *BodyEntry) GetFormData() map[string]string {
+	formData := map[string]string{}
 
 	for _, r := range b.rows {
 		if r.Key.Text != "" {
-			headers[r.Key.Text] = r.Value.Text
+			formData[r.Key.Text] = r.Value.Text
 		}
 	}
-	return headers
+	return formData
 }
