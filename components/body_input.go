@@ -3,6 +3,7 @@ package components
 import (
 	"encoding/json"
 	"errors"
+	"net/url"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -93,15 +94,14 @@ func (b *BodyEntry) switchMode(mode string) {
 	}
 }
 
-func (b *BodyEntry) GetFormData() map[string]string {
-	formData := map[string]string{}
-
+func (b *BodyEntry) GetFormData() string {
+	formData := url.Values{}
 	for _, r := range b.rows {
 		if r.Key.Text != "" {
-			formData[r.Key.Text] = r.Value.Text
+			formData.Add(r.Key.Text, r.Value.Text)
 		}
 	}
-	return formData
+	return formData.Encode()
 }
 
 func (b *BodyEntry) GetRawData() (string, error) {

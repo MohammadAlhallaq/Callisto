@@ -33,13 +33,23 @@ func NewFullBody() *container.Split {
 		sendBtn.Hide()
 		client := network.NewClient(10 * time.Second)
 		headers := headersEntry.GetHeaders()
-		// bodyEntry.GetRawData()
+		var body string
+		var err error
 
-		// Create request with body
+		if bodyEntry.mode == "raw" {
+			body, _ = bodyEntry.GetRawData()
+			// if err != nil {
+			// 	return "", err
+			// }
+		} else {
+			body = bodyEntry.GetFormData()
+		}
+
+		// Now `body` exists here
 		result, err := client.Send(
 			HTTPMethods[selecty.SelectedIndex()],
 			urlEntry.Text,
-			"asd",
+			body,
 			headers,
 		)
 
