@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"time"
 
+	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
 )
 
-func NewFullBody() *container.Split {
+func NewFullBody(w fyne.Window) *container.Split {
 
 	// INITIALIZE URL INPUT
 	urlEntry := NewURLEntry()
@@ -37,15 +39,14 @@ func NewFullBody() *container.Split {
 		var err error
 
 		if bodyEntry.mode == "raw" {
-			body, _ = bodyEntry.GetRawData()
-			// if err != nil {
-			// 	return "", err
-			// }
+			body, err = bodyEntry.GetRawData()
+			if err != nil {
+				dialog.ShowError(err, w)
+			}
 		} else {
 			body = bodyEntry.GetFormData()
 		}
 
-		// Now `body` exists here
 		result, err := client.Send(
 			HTTPMethods[selecty.SelectedIndex()],
 			urlEntry.Text,
@@ -76,8 +77,10 @@ func NewFullBody() *container.Split {
 		container.NewPadded(sendBtn),
 	)
 
-	fullBody := container.NewVSplit(upper, output)
-	fullBody.SetOffset(0.1)
+	content := container.NewBorder(nil, nil, nil, nil, output)
+
+	fullBody := container.NewVSplit(upper, content)
+	fullBody.SetOffset(0.5)
 
 	return fullBody
 }

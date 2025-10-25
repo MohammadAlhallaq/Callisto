@@ -6,13 +6,13 @@ import (
 )
 
 type ReadOnlyMultiLineEntry struct {
-	*widget.Entry
+	widget.Entry
 }
 
 func NewResponseView() *ReadOnlyMultiLineEntry {
-	e := &ReadOnlyMultiLineEntry{
-		widget.NewMultiLineEntry(),
-	}
+	e := &ReadOnlyMultiLineEntry{}
+	e.ExtendBaseWidget(e)
+	e.MultiLine = true
 	e.Wrapping = fyne.TextWrapWord
 	e.SetPlaceHolder("Responses will appear here...")
 	return e
@@ -21,5 +21,3 @@ func NewResponseView() *ReadOnlyMultiLineEntry {
 // Prevent typing
 func (e *ReadOnlyMultiLineEntry) TypedRune(r rune)                 {}
 func (e *ReadOnlyMultiLineEntry) TypedKey(key *fyne.KeyEvent)      {}
-func (e *ReadOnlyMultiLineEntry) Tapped(*fyne.PointEvent)          {}
-func (e *ReadOnlyMultiLineEntry) TappedSecondary(*fyne.PointEvent) {}

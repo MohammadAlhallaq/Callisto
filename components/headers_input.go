@@ -22,7 +22,6 @@ func NewHeadersEntry() *HeadersEntry {
 	}
 
 	defaultHeaders := []map[string]string{
-		{"Content-Type": "application/json"},
 		{"Accept": "application/json"},
 	}
 
