@@ -1,9 +1,10 @@
 package components
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
-	"net/url"
+	"mime/multipart"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
@@ -94,27 +95,30 @@ func (b *BodyEntry) switchMode(mode string) {
 	}
 }
 
-func (b *BodyEntry) GetFormData() string {
-	formData := url.Values{}
+func (b *BodyEntry) GetFormData() (*bytes.Buffer, string) {
+	body := &bytes.Buffer{}
+	writer := multipart.NewWriter(body)
+	defer writer.Close()
+
 	for _, r := range b.rows {
 		if r.Key.Text != "" {
-			formData.Add(r.Key.Text, r.Value.Text)
+			_ = writer.WriteField(r.Key.Text, r.Value.Text)
 		}
 	}
-	return formData.Encode()
+	return body, writer.FormDataContentType()
 }
 
-func (b *BodyEntry) GetRawData() (string, error) {
+func (b *BodyEntry) GetRawData() (*bytes.Buffer, string, error) {
 	data := b.rawEntry.Text
 
 	if data == "" {
-		return "", errors.New("body is empty")
+		return nil, "", errors.New("body is empty")
 	}
 
 	var js interface{}
 	if err := json.Unmarshal([]byte(data), &js); err != nil {
-		return "", errors.New("invalid JSON: " + err.Error())
+		return nil, "", errors.New("invalid JSON: " + err.Error())
 	}
 
-	return data, nil
+	return bytes.NewBufferString(data), "application/json", nil
 }

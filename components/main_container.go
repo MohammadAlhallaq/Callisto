@@ -2,6 +2,7 @@ package components
 
 import (
 	"Callisto/network"
+	"bytes"
 	"fmt"
 	"time"
 
@@ -35,16 +36,19 @@ func NewFullBody(w fyne.Window) *container.Split {
 		sendBtn.Hide()
 		client := network.NewClient(10 * time.Second)
 		headers := headersEntry.GetHeaders()
-		var body string
+		var body *bytes.Buffer
+		var contentType string
 		var err error
 
 		if bodyEntry.mode == "raw" {
-			body, err = bodyEntry.GetRawData()
+			body, contentType, err = bodyEntry.GetRawData()
 			if err != nil {
 				dialog.ShowError(err, w)
 			}
+			headers["Content-Type"] = contentType
 		} else {
-			body = bodyEntry.GetFormData()
+			body, contentType = bodyEntry.GetFormData()
+			headers["Content-Type"] = contentType
 		}
 
 		result, err := client.Send(
