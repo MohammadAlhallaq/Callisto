@@ -44,6 +44,8 @@ func NewFullBody(w fyne.Window) *container.Split {
 			body, contentType, err = bodyEntry.GetRawData()
 			if err != nil {
 				dialog.ShowError(err, w)
+				sendBtn.Show()
+				return
 			}
 			headers["Content-Type"] = contentType
 		} else {
