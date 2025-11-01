@@ -32,9 +32,11 @@ func NewFullBody(w fyne.Window) *container.Split {
 	)
 
 	var sendBtn *widget.Button
+	progressBar := widget.NewProgressBarInfinite()
+	progressBar.Hide()
+
 	sendBtn = widget.NewButton("Send Request", func() {
-		sendBtn.Hide()
-		client := network.NewClient(10 * time.Second)
+		client := network.NewClient(60 * time.Second)
 		headers := headersEntry.GetHeaders()
 		var body *bytes.Buffer
 		var contentType string
@@ -44,7 +46,6 @@ func NewFullBody(w fyne.Window) *container.Split {
 			body, contentType, err = bodyEntry.GetRawData()
 			if err != nil {
 				dialog.ShowError(err, w)
-				sendBtn.Show()
 				return
 			}
 			headers["Content-Type"] = contentType
@@ -53,23 +54,27 @@ func NewFullBody(w fyne.Window) *container.Split {
 			headers["Content-Type"] = contentType
 		}
 
-		result, err := client.Send(
-			HTTPMethods[selecty.SelectedIndex()],
-			urlEntry.Text,
-			body,
-			headers,
-		)
-
-		sendBtn.Show()
-
-		if err != nil {
-			output.SetText(fmt.Sprintf("Error sending request: %v", err))
-			return
-		}
-		output.SetText(result)
+		progressBar.Show()
+		sendBtn.Hide()
+		go func() {
+			result, err := client.Send(
+				HTTPMethods[selecty.SelectedIndex()],
+				urlEntry.Text,
+				body,
+				headers,
+			)
+			fyne.Do(func() {
+				if err != nil {
+					output.SetText(fmt.Sprintf("Error sending request: %v", err))
+				} else {
+					output.SetText(result)
+				}
+				sendBtn.Show()
+				progressBar.Hide()
+			})
+		}()
 	})
 	sendBtn.Importance = widget.WarningImportance
-
 	hbox := container.New(
 		layout.NewBorderLayout(nil, nil, selecty, nil),
 		urlEntry,
@@ -80,7 +85,10 @@ func NewFullBody(w fyne.Window) *container.Split {
 		hbox,
 		widget.NewLabel(""),
 		tabs,
-		container.NewPadded(sendBtn),
+		container.NewStack(
+			container.NewPadded(sendBtn),
+			container.NewPadded(progressBar),
+		),
 	)
 
 	content := container.NewBorder(nil, nil, nil, nil, output)
