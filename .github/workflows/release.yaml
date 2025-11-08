@@ -1,5 +1,8 @@
 name: Build Fyne App
 
+permissions:
+  contents: write
+  
 on:
   release:
     types: [published]
