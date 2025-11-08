@@ -31,12 +31,14 @@ jobs:
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
             -icon "./assets/callisto-logo.png"
+            -o ./build/linux-${{ matrix.goarch }}/Callisto
+
 
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-linux-${{ matrix.goarch }}
-          path: ./build/*
+          path: ./build/linux-${{ matrix.goarch }}/*
 
   build-windows:
     name: Build Windows
@@ -64,12 +66,14 @@ jobs:
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
           fyne package -name "Callisto" -icon "./assets/callisto-logo.png"
+          -o ./build/linux-${{ matrix.goarch }}/Callisto
+
 
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-windows-${{ matrix.goarch }}
-          path: ./build/*
+          path: ./build/linux-${{ matrix.goarch }}/*
 
   build-macos:
     name: Build macOS
@@ -97,9 +101,11 @@ jobs:
           GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
             -icon "./assets/callisto-logo.png"
+            -o ./build/linux-${{ matrix.goarch }}/Callisto
+
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-macos-${{ matrix.goarch }}
-          path: ./build/*
+          path: ./build/linux-${{ matrix.goarch }}/*
