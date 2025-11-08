@@ -24,6 +24,8 @@ jobs:
 
       - name: Build Linux app
         run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgl1-mesa-dev xorg-dev pkg-config
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
@@ -78,10 +80,6 @@ jobs:
           go-version: '1.21'
 
       - run: go install fyne.io/tools/cmd/fyne@latest
-
-      # Ensure GNU tar is installed
-      - name: Install gtar
-        run: brew install gnu-tar
 
       - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
