@@ -12,34 +12,28 @@ jobs:
       matrix:
         goarch: [amd64]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.21'
 
-      - name: Install Fyne CLI
-        run: go install fyne.io/tools/cmd/fyne@latest
+      - run: go install fyne.io/tools/cmd/fyne@latest
 
-      - name: Add Go bin to PATH
-        run: echo "$HOME/go/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Build Linux app
         run: |
-          mkdir -p ./build/linux-${{ matrix.goarch }}
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto" \
             --source-dir .
 
-      - name: Upload Linux artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-linux-${{ matrix.goarch }}
-          path: ./build/linux-${{ matrix.goarch }}/*
+          path: ./Callisto_linux_${{ matrix.goarch }}/*
 
   build-windows:
     name: Build Windows
@@ -48,34 +42,27 @@ jobs:
       matrix:
         goarch: [amd64]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.21'
 
-      - name: Install Fyne CLI
-        run: go install fyne.io/tools/cmd/fyne@latest
+      - run: go install fyne.io/tools/cmd/fyne@latest
 
-      - name: Add Go bin to PATH
-        run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
+      - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
       - name: Build Windows app
         run: |
-          mkdir .\build\windows-${{ matrix.goarch }}
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
           fyne package --name "Callisto" --icon "./assets/callisto-logo.png" \
-            --executable "Callisto.exe" \
-            --source-dir .
+            --executable "Callisto.exe" --source-dir .
 
-      - name: Upload Windows artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-windows-${{ matrix.goarch }}
-          path: .\build\windows-${{ matrix.goarch }}\*
+          path: ./Callisto_windows_${{ matrix.goarch }}/*
 
   build-macos:
     name: Build macOS
@@ -84,31 +71,25 @@ jobs:
       matrix:
         goarch: [amd64, arm64]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v4
+      - uses: actions/setup-go@v4
         with:
           go-version: '1.21'
 
-      - name: Install Fyne CLI
-        run: go install fyne.io/tools/cmd/fyne@latest
+      - run: go install fyne.io/tools/cmd/fyne@latest
 
-      - name: Add Go bin to PATH
-        run: echo "$HOME/go/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Build macOS app
         run: |
-          mkdir -p ./build/macos-${{ matrix.goarch }}
           GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto" \
             --source-dir .
 
-      - name: Upload macOS artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-macos-${{ matrix.goarch }}
-          path: ./build/macos-${{ matrix.goarch }}/*
+          path: ./Callisto_darwin_${{ matrix.goarch }}/*
