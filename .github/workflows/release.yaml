@@ -30,7 +30,7 @@ jobs:
         run: |
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
-            -icon "./assets/callisto-logo.png"
+            -icon "./assets/callisto-logo.png" \
             -o ./build/linux-${{ matrix.goarch }}/Callisto
 
 
@@ -65,7 +65,7 @@ jobs:
         run: |
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
-          fyne package -name "Callisto" -icon "./assets/callisto-logo.png"
+          fyne package -name "Callisto" -icon "./assets/callisto-logo.png" \
           -o ./build/linux-${{ matrix.goarch }}/Callisto
 
 
@@ -100,7 +100,7 @@ jobs:
         run: |
           GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
-            -icon "./assets/callisto-logo.png"
+            -icon "./assets/callisto-logo.png" \
             -o ./build/linux-${{ matrix.goarch }}/Callisto
 
 
