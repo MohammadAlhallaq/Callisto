@@ -53,6 +53,7 @@ jobs:
       - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
       - name: Build Windows app
+        shell: cmd
         run: |
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
