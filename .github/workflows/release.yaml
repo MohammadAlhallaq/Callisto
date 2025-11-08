@@ -38,6 +38,8 @@ jobs:
 
       - name: Upload Linux to release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./Callisto_linux-${{ matrix.goarch }}.zip
@@ -74,6 +76,8 @@ jobs:
 
       - name: Upload Windows to release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./Callisto_windows-${{ matrix.goarch }}.zip
@@ -119,6 +123,8 @@ jobs:
 
       - name: Upload macOS to release
         uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: Callisto-macos-${{ matrix.goarch }}.zip
