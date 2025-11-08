@@ -79,15 +79,28 @@ jobs:
 
       - run: go install fyne.io/tools/cmd/fyne@latest
 
+      # Ensure GNU tar is installed
+      - name: Install gtar
+        run: brew install gnu-tar
+
       - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Build macOS app
         run: |
+          echo "Building for ${{ matrix.goarch }}"
           GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto" \
             --source-dir .
+
+      - name: Verify .app bundle
+        run: |
+          if [ ! -d "Callisto.app" ]; then
+            echo "Error: Callisto.app not found!"
+            exit 1
+          fi
+          ls -l Callisto.app
 
       - name: Zip macOS app
         run: |
