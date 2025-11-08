@@ -29,7 +29,7 @@ jobs:
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
-            --executable "Callisto" \
+            --executable "Callisto_linux_${{ matrix.goarch }}/Callisto" \
             --source-dir .
 
       - uses: actions/upload-artifact@v4
