@@ -57,8 +57,7 @@ jobs:
         run: |
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
-          fyne package --name "Callisto" --icon "./assets/callisto-logo.png" \
-            --executable "Callisto.exe" --source-dir .
+          fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto.exe" --source-dir .
 
       - uses: actions/upload-artifact@v4
         with:
