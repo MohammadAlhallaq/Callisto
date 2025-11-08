@@ -35,7 +35,7 @@ jobs:
           # Use environment variables instead of -os/-arch flags
           GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
-            -icon "../assets/path/callisto-logo.png"
+            -icon "../assets/callisto-logo.png"
 
 
       
