@@ -64,36 +64,36 @@ jobs:
           name: fyne-binaries-windows-${{ matrix.goarch }}
           path: ./Callisto_windows_${{ matrix.goarch }}/*
 
-build-macos:
-  name: Build macOS
-  runs-on: macos-latest
-  strategy:
-    matrix:
-      goarch: [amd64, arm64]
-  steps:
-    - uses: actions/checkout@v4
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        goarch: [amd64, arm64]
+    steps:
+      - uses: actions/checkout@v4
 
-    - uses: actions/setup-go@v4
-      with:
-        go-version: '1.21'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
 
-    - run: go install fyne.io/tools/cmd/fyne@latest
+      - run: go install fyne.io/tools/cmd/fyne@latest
 
-    - run: echo "$HOME/go/bin" >> $GITHUB_PATH
+      - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
-    - name: Build macOS app
-      run: |
-        GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
-          --name "Callisto" \
-          --icon "./assets/callisto-logo.png" \
-          --executable "Callisto" \
-          --source-dir .
+      - name: Build macOS app
+        run: |
+          GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
+            --name "Callisto" \
+            --icon "./assets/callisto-logo.png" \
+            --executable "Callisto" \
+            --source-dir .
 
-    - name: Zip macOS app
-      run: |
-        zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
+      - name: Zip macOS app
+        run: |
+          zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: fyne-binaries-macos-${{ matrix.goarch }}
-        path: Callisto-macos-${{ matrix.goarch }}.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fyne-binaries-macos-${{ matrix.goarch }}
+          path: Callisto-macos-${{ matrix.goarch }}.zip
