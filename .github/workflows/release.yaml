@@ -81,7 +81,7 @@ jobs:
         run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
 
       - name: Upload Windows to release
-        uses: actions/upload-release-asset@v2
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -127,7 +127,7 @@ jobs:
           zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
 
       - name: Upload macOS to release
-        uses: actions/upload-release-asset@v2
+        uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
