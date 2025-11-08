@@ -33,7 +33,6 @@ jobs:
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto" \
-            --output "./build/linux-${{ matrix.goarch }}" \
             --source-dir .
 
       - name: Upload Linux artifacts
@@ -69,7 +68,7 @@ jobs:
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
           fyne package --name "Callisto" --icon "./assets/callisto-logo.png" \
-            --executable "Callisto.exe" --output ".\build\windows-${{ matrix.goarch }}" \
+            --executable "Callisto.exe" \
             --source-dir .
 
       - name: Upload Windows artifacts
@@ -106,7 +105,6 @@ jobs:
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto" \
-            --output "./build/macos-${{ matrix.goarch }}" \
             --source-dir .
 
       - name: Upload macOS artifacts
