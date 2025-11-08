@@ -5,18 +5,12 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-linux:
+    name: Build Linux
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        goos: [linux, windows, darwin]  # macos = darwin
-        goarch: [amd64, arm64]
-        exclude:
-          - goos: windows
-            goarch: arm64
-          - goos: linux
-            goarch: arm64
-
+        goarch: [amd64]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -32,18 +26,80 @@ jobs:
       - name: Add Go bin to PATH
         run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
-      - name: Build Fyne app
+      - name: Build Linux app
         run: |
-          # Use environment variables instead of -os/-arch flags
-          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} fyne package \
+          GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto" \
             -icon "./assets/callisto-logo.png"
 
-
-      
-
-      - name: Upload artifacts
+      - name: Upload Linux artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fyne-binaries-${{ matrix.goos }}-${{ matrix.goarch }}
+          name: fyne-binaries-linux-${{ matrix.goarch }}
+          path: ./build/*
+
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        goarch: [amd64]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Install Fyne CLI
+        run: go install fyne.io/tools/cmd/fyne@latest
+
+      - name: Add Go bin to PATH
+        run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
+
+      - name: Build Windows app
+        run: |
+          set GOOS=windows
+          set GOARCH=${{ matrix.goarch }}
+          fyne package -name "Callisto" -icon "./assets/callisto-logo.png"
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fyne-binaries-windows-${{ matrix.goarch }}
+          path: ./build/*
+
+  build-macos:
+    name: Build macOS
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        goarch: [amd64, arm64]  # optional: universal macOS
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Install Fyne CLI
+        run: go install fyne.io/tools/cmd/fyne@latest
+
+      - name: Add Go bin to PATH
+        run: echo "$HOME/go/bin" >> $GITHUB_PATH
+
+      - name: Build macOS app
+        run: |
+          GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
+            -name "Callisto" \
+            -icon "./assets/callisto-logo.png"
+
+      - name: Upload macOS artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fyne-binaries-macos-${{ matrix.goarch }}
           path: ./build/*
