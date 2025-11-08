@@ -92,4 +92,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: fyne-binaries-macos-${{ matrix.goarch }}
-          path: ./Callisto_darwin_${{ matrix.goarch }}/*
+          path: ./Callisto.app
