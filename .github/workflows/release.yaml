@@ -34,7 +34,6 @@ jobs:
         run: |
           # Use environment variables instead of -os/-arch flags
           GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} fyne package \
-            -icon app_icon.png \
             -name "Callisto"
 
       - name: Upload artifacts
