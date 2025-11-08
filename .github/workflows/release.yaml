@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [linux, windows, darwin]  # macos = darwin
-        arch: [amd64, arm64]
+        goos: [linux, windows, darwin]  # macos = darwin
+        goarch: [amd64, arm64]
         exclude:
-          - os: windows
-            arch: arm64
+          - goos: windows
+            goarch: arm64
 
     steps:
       - name: Checkout repository
@@ -33,11 +33,13 @@ jobs:
       - name: Build Fyne app
         run: |
           # Use environment variables instead of -os/-arch flags
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} fyne package \
+          GOOS=${{ matrix.goos }} GOARCH=${{ matrix.goarch }} fyne package \
             -name "Callisto"
+
+      
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fyne-binaries-${{ matrix.os }}-${{ matrix.arch }}
+          name: fyne-binaries-${{ matrix.goos }}-${{ matrix.goarch }}
           path: ./build/*
