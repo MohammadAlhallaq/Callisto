@@ -1,8 +1,8 @@
 name: Build Fyne App
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
 
 jobs:
   build-linux:
@@ -19,23 +19,30 @@ jobs:
           go-version: '1.21'
 
       - run: go install fyne.io/tools/cmd/fyne@latest
-
       - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Build Linux app
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential libgl1-mesa-dev xorg-dev pkg-config
+          mkdir -p Callisto_linux_${{ matrix.goarch }}
           GOOS=linux GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
             --executable "Callisto_linux_${{ matrix.goarch }}/Callisto" \
             --source-dir .
 
-      - uses: actions/upload-artifact@v4
+      - name: Zip Linux app
+        run: |
+          zip -r Callisto_linux-${{ matrix.goarch }}.zip Callisto_linux_${{ matrix.goarch }}
+
+      - name: Upload Linux to release
+        uses: actions/upload-release-asset@v1
         with:
-          name: fyne-binaries-linux-${{ matrix.goarch }}
-          path: ./Callisto_linux_${{ matrix.goarch }}/*
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./Callisto_linux-${{ matrix.goarch }}.zip
+          asset_name: Callisto_linux-${{ matrix.goarch }}.zip
+          asset_content_type: application/zip
 
   build-windows:
     name: Build Windows
@@ -51,7 +58,6 @@ jobs:
           go-version: '1.21'
 
       - run: go install fyne.io/tools/cmd/fyne@latest
-
       - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
       - name: Build Windows app
@@ -59,12 +65,20 @@ jobs:
         run: |
           set GOOS=windows
           set GOARCH=${{ matrix.goarch }}
+          mkdir Callisto_windows_${{ matrix.goarch }}
           fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto_windows_${{ matrix.goarch }}\\Callisto.exe" --source-dir .
 
-      - uses: actions/upload-artifact@v4
+      - name: Zip Windows app
+        shell: powershell
+        run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
+
+      - name: Upload Windows to release
+        uses: actions/upload-release-asset@v1
         with:
-          name: fyne-binaries-windows-${{ matrix.goarch }}
-          path: ./Callisto_windows_${{ matrix.goarch }}/*
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./Callisto_windows-${{ matrix.goarch }}.zip
+          asset_name: Callisto_windows-${{ matrix.goarch }}.zip
+          asset_content_type: application/zip
 
   build-macos:
     name: Build macOS
@@ -80,13 +94,11 @@ jobs:
           go-version: '1.21'
 
       - run: go install fyne.io/tools/cmd/fyne@latest
-
       - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Build macOS app
         run: |
           echo "Building for ${{ matrix.goarch }}"
-          export TAR=/usr/bin/tar
           GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
             --name "Callisto" \
             --icon "./assets/callisto-logo.png" \
@@ -105,7 +117,10 @@ jobs:
         run: |
           zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload macOS to release
+        uses: actions/upload-release-asset@v1
         with:
-          name: fyne-binaries-macos-${{ matrix.goarch }}
-          path: Callisto-macos-${{ matrix.goarch }}.zip
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: Callisto-macos-${{ matrix.goarch }}.zip
+          asset_name: Callisto-macos-${{ matrix.goarch }}.zip
+          asset_content_type: application/zip
