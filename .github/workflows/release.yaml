@@ -48,86 +48,86 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 
-  build-windows:
-    name: Build Windows
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        goarch: [amd64]
-    steps:
-      - uses: actions/checkout@v4
+  # build-windows:
+  #   name: Build Windows
+  #   runs-on: windows-latest
+  #   strategy:
+  #     matrix:
+  #       goarch: [amd64]
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
+  #     - uses: actions/setup-go@v4
+  #       with:
+  #         go-version: '1.21'
 
-      - run: go install fyne.io/tools/cmd/fyne@latest
-      - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
+  #     - run: go install fyne.io/tools/cmd/fyne@latest
+  #     - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
-      - name: Build Windows app
-        shell: cmd
-        run: |
-          set GOOS=windows
-          set GOARCH=${{ matrix.goarch }}
-          mkdir Callisto_windows_${{ matrix.goarch }}
-          fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto_windows_${{ matrix.goarch }}\\Callisto.exe" --source-dir .
+  #     - name: Build Windows app
+  #       shell: cmd
+  #       run: |
+  #         set GOOS=windows
+  #         set GOARCH=${{ matrix.goarch }}
+  #         mkdir Callisto_windows_${{ matrix.goarch }}
+  #         fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto_windows_${{ matrix.goarch }}\\Callisto.exe" --source-dir .
 
-      - name: Zip Windows app
-        shell: powershell
-        run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
+  #     - name: Zip Windows app
+  #       shell: powershell
+  #       run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
 
-      - name: Upload Windows to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./Callisto_windows-${{ matrix.goarch }}.zip
-          asset_name: Callisto_windows-${{ matrix.goarch }}.zip
-          asset_content_type: application/zip
+  #     - name: Upload Windows to release
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ github.event.release.upload_url }}
+  #         asset_path: ./Callisto_windows-${{ matrix.goarch }}.zip
+  #         asset_name: Callisto_windows-${{ matrix.goarch }}.zip
+  #         asset_content_type: application/zip
 
-  build-macos:
-    name: Build macOS
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        goarch: [amd64, arm64]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.21'
+  # build-macos:
+  #   name: Build macOS
+  #   runs-on: macos-latest
+  #   strategy:
+  #     matrix:
+  #       goarch: [amd64, arm64]
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-go@v4
+  #       with:
+  #         go-version: '1.21'
 
-      - run: go install fyne.io/tools/cmd/fyne@latest
-      - run: echo "$HOME/go/bin" >> $GITHUB_PATH
+  #     - run: go install fyne.io/tools/cmd/fyne@latest
+  #     - run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
-      - name: Build macOS app
-        run: |
-          echo "Building for ${{ matrix.goarch }}"
-          GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
-            --name "Callisto" \
-            --icon "./assets/callisto-logo.png" \
-            --executable "Callisto" \
-            --source-dir .
+  #     - name: Build macOS app
+  #       run: |
+  #         echo "Building for ${{ matrix.goarch }}"
+  #         GOOS=darwin GOARCH=${{ matrix.goarch }} fyne package \
+  #           --name "Callisto" \
+  #           --icon "./assets/callisto-logo.png" \
+  #           --executable "Callisto" \
+  #           --source-dir .
 
-      - name: Verify .app bundle
-        run: |
-          if [ ! -d "Callisto.app" ]; then
-            echo "Error: Callisto.app not found!"
-            exit 1
-          fi
-          ls -l Callisto.app
+  #     - name: Verify .app bundle
+  #       run: |
+  #         if [ ! -d "Callisto.app" ]; then
+  #           echo "Error: Callisto.app not found!"
+  #           exit 1
+  #         fi
+  #         ls -l Callisto.app
 
-      - name: Zip macOS app
-        run: |
-          zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
+  #     - name: Zip macOS app
+  #       run: |
+  #         zip -r Callisto-macos-${{ matrix.goarch }}.zip Callisto.app
 
-      - name: Upload macOS to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: Callisto-macos-${{ matrix.goarch }}.zip
-          asset_name: Callisto-macos-${{ matrix.goarch }}.zip
-          asset_content_type: application/zip
+  #     - name: Upload macOS to release
+  #       uses: actions/upload-release-asset@v1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         upload_url: ${{ github.event.release.upload_url }}
+  #         asset_path: Callisto-macos-${{ matrix.goarch }}.zip
+  #         asset_name: Callisto-macos-${{ matrix.goarch }}.zip
+  #         asset_content_type: application/zip
