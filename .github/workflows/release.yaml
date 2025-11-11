@@ -85,7 +85,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p release-assets
-          mv Callisto_linux-${{ matrix.goarch }}.zip release-assets/
+          mv Callisto_windows-${{ matrix.goarch }}.zip release-assets/
           gh release upload ${{ github.ref_name }} release-assets/* --clobber
 
   # build-macos:
