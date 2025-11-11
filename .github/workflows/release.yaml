@@ -48,43 +48,45 @@ jobs:
           gh release upload ${{ github.ref_name }} release-assets/* --clobber
 
 
-  # build-windows:
-  #   name: Build Windows
-  #   runs-on: windows-latest
-  #   strategy:
-  #     matrix:
-  #       goarch: [amd64]
-  #   steps:
-  #     - uses: actions/checkout@v4
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        goarch: [amd64]
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - uses: actions/setup-go@v4
-  #       with:
-  #         go-version: '1.21'
+      - uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
 
-  #     - run: go install fyne.io/tools/cmd/fyne@latest
-  #     - run: setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
-  #     - name: Build Windows app
-  #       shell: cmd
-  #       run: |
-  #         set GOOS=windows
-  #         set GOARCH=${{ matrix.goarch }}
-  #         mkdir Callisto_windows_${{ matrix.goarch }}
-  #         fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto_windows_${{ matrix.goarch }}\\Callisto.exe" --source-dir .
 
-  #     - name: Zip Windows app
-  #       shell: powershell
-  #       run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
+      - name: Install Fyne CLI
+        run: |
+          go install fyne.io/tools/cmd/fyne@latest
+          setx PATH "%PATH%;%USERPROFILE%\go\bin"
 
-  #     - name: Upload Windows to release
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         upload_url: ${{ github.event.release.upload_url }}
-  #         asset_path: ./Callisto_windows-${{ matrix.goarch }}.zip
-  #         asset_name: Callisto_windows-${{ matrix.goarch }}.zip
-  #         asset_content_type: application/zip
+      - name: Build Windows app
+        shell: cmd
+        run: |
+          set GOOS=windows
+          set GOARCH=${{ matrix.goarch }}
+          mkdir Callisto_windows_${{ matrix.goarch }}
+          fyne package --name "Callisto" --icon "./assets/callisto-logo.png" --executable "Callisto_windows_${{ matrix.goarch }}\\Callisto.exe" --source-dir .
+
+      - name: Zip Windows app
+        shell: powershell
+        run: Compress-Archive -Path "Callisto_windows_${{ matrix.goarch }}\*" -DestinationPath "Callisto_windows-${{ matrix.goarch }}.zip"
+
+      - name: Upload Windows to release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p release-assets
+          mv Callisto_linux-${{ matrix.goarch }}.zip release-assets/
+          gh release upload ${{ github.ref_name }} release-assets/* --clobber
 
   # build-macos:
   #   name: Build macOS
