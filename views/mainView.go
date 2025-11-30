@@ -10,18 +10,31 @@ import (
 
 func NewMainView(w fyne.Window) *fyne.Container {
 
+	// Top account bar
 	accountBar := components.NewAccountBar(w, NewSignInForm(w), NewSignUpForm(w))
-	HeaderTabs := container.NewDocTabs(
+
+	// Left-side request history
+	var contentSplit fyne.CanvasObject
+	requestHistoryList := components.NewRequestHistoryList()
+
+	headerTabs := container.NewDocTabs(
 		container.NewTabItem("New Request", components.NewFullBody(w)),
 	)
-	HeaderTabs.CreateTab = func() *container.TabItem {
+	headerTabs.CreateTab = func() *container.TabItem {
 		return container.NewTabItem("New Request", components.NewFullBody(w))
+	}
+
+	if requestHistoryList != nil {
+		contentSplit = container.NewHSplit(requestHistoryList, headerTabs)
+		contentSplit.(*container.Split).SetOffset(0.25) // FYI: Split offset is set this way in Fyne
+	} else {
+		contentSplit = headerTabs
 	}
 
 	content := container.New(
 		layout.NewBorderLayout(accountBar, nil, nil, nil),
 		accountBar,
-		HeaderTabs,
+		contentSplit,
 	)
 	return content
 }

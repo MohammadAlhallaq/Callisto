@@ -19,5 +19,5 @@ func NewResponseView() *ReadOnlyMultiLineEntry {
 }
 
 // Prevent typing
-func (e *ReadOnlyMultiLineEntry) TypedRune(r rune)                 {}
-func (e *ReadOnlyMultiLineEntry) TypedKey(key *fyne.KeyEvent)      {}
+func (e *ReadOnlyMultiLineEntry) TypedRune(r rune)            {}
+func (e *ReadOnlyMultiLineEntry) TypedKey(key *fyne.KeyEvent) {}
