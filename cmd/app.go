@@ -9,7 +9,7 @@ import (
 	"fyne.io/fyne/v2/app"
 )
 
-func Excute() {
+func Execute() {
 	a := app.New()
 	w := a.NewWindow("Callisto")
 	mainPage := views.NewMainView(w)

@@ -69,7 +69,7 @@ func (b *BodyEntry) switchMode(mode string) {
 			b.rowsContainer.Remove(row)
 			for i, k := range b.rows {
 				if k.Key == key && k.Value == value {
-					b.rows = append(b.rows[:i], b.rows[i:]...)
+					b.rows = append(b.rows[:i], b.rows[i+1:]...)
 					break
 				}
 			}

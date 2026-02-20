@@ -11,7 +11,7 @@ func main() {
 	supabase.Init()
 	err := auth.FetchLoggedInUser()
 	if err != nil {
-		fmt.Println("failed to get user: %w", err)
+		fmt.Printf("failed to get user: %v\n", err)
 	}
-	cmd.Excute()
+	cmd.Execute()
 }
