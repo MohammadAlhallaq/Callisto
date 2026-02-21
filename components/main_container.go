@@ -35,7 +35,7 @@ func NewFullBody(w fyne.Window) *container.Split {
 	progressBar := widget.NewProgressBarInfinite()
 	progressBar.Hide()
 
-	sendBtn = widget.NewButton("Send Request", func() {
+	sendBtn = widget.NewButton("Send", func() {
 		client := network.NewClient(60 * time.Second)
 		headers := headersEntry.GetHeaders()
 		var body *bytes.Buffer
@@ -75,26 +75,24 @@ func NewFullBody(w fyne.Window) *container.Split {
 		}()
 	})
 	sendBtn.Importance = widget.WarningImportance
-	hbox := container.New(
-		layout.NewBorderLayout(nil, nil, selecty, nil),
-		urlEntry,
+
+	// URL bar: [Method ▼] [URL_______________] [Send]
+	sendStack := container.NewStack(sendBtn, progressBar)
+	urlBar := container.New(
+		layout.NewBorderLayout(nil, nil, selecty, sendStack),
 		selecty,
+		sendStack,
+		urlEntry,
 	)
 
 	upper := container.NewVBox(
-		hbox,
-		widget.NewLabel(""),
+		urlBar,
+		widget.NewSeparator(),
 		tabs,
-		container.NewStack(
-			container.NewPadded(sendBtn),
-			container.NewPadded(progressBar),
-		),
 	)
 
-	content := container.NewBorder(nil, nil, nil, nil, output)
-
-	fullBody := container.NewVSplit(upper, content)
-	fullBody.SetOffset(0.5)
+	fullBody := container.NewVSplit(upper, output)
+	fullBody.SetOffset(0.4)
 
 	return fullBody
 }

@@ -8,9 +8,7 @@ import (
 	"github.com/supabase-community/supabase-go"
 )
 
-var Client *supabase.Client
-
-func Init() {
+func NewClient() (*supabase.Client, error) {
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("Error loading .env file:", err)
 	}
@@ -18,9 +16,5 @@ func Init() {
 	url := os.Getenv("SUPABASE_URL")
 	key := os.Getenv("SERVICE_ROLE")
 
-	var err error
-	Client, err = supabase.NewClient(url, key, nil)
-	if err != nil {
-		fmt.Println("Supabase init error:", err)
-	}
+	return supabase.NewClient(url, key, nil)
 }

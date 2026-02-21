@@ -2,26 +2,33 @@ package auth
 
 import (
 	"Callisto/models"
-	"Callisto/supabase"
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/supabase-community/gotrue-go/types"
+	"github.com/supabase-community/supabase-go"
 )
 
-var User *models.User
+type AuthService struct {
+	client *supabase.Client
+	User   *models.User
+}
 
-func SignInWithEmailPassword(email, password string) error {
-	session, err := supabase.Client.SignInWithEmailPassword(email, password)
+func NewAuthService(client *supabase.Client) *AuthService {
+	return &AuthService{client: client}
+}
+
+func (a *AuthService) SignInWithEmailPassword(email, password string) error {
+	session, err := a.client.SignInWithEmailPassword(email, password)
 	if err != nil {
 		return err
 	}
 
 	saveSessionData(session)
 
-	User = &models.User{
+	a.User = &models.User{
 		ID:        session.User.ID,
 		Email:     session.User.Email,
 		CreatedAt: session.User.CreatedAt,
@@ -29,19 +36,19 @@ func SignInWithEmailPassword(email, password string) error {
 	return nil
 }
 
-func SignUpWithEmail(user models.User) error {
+func (a *AuthService) SignUpWithEmail(user models.User) error {
 	req := types.SignupRequest{
 		Email:    user.Email,
 		Password: user.Password,
 	}
-	session, err := supabase.Client.Auth.Signup(req)
+	session, err := a.client.Auth.Signup(req)
 	if err != nil {
 		return err
 	}
 
 	saveSessionData(session.Session)
 
-	User = &models.User{
+	a.User = &models.User{
 		ID:        session.User.ID,
 		Email:     session.User.Email,
 		CreatedAt: session.User.CreatedAt,
@@ -50,7 +57,7 @@ func SignUpWithEmail(user models.User) error {
 }
 
 func getSessionFilePath() string {
-	dir, _ := os.UserConfigDir() // cross-platform config dir
+	dir, _ := os.UserConfigDir()
 	return filepath.Join(dir, "callisto-session.json")
 }
 
@@ -81,24 +88,24 @@ func loadSession() (*authData, error) {
 	return &data, err
 }
 
-func FetchLoggedInUser() error {
+func (a *AuthService) FetchLoggedInUser() error {
 	authData, err := loadSession()
 	if err != nil {
 		return err
 	}
 
-	res, err := supabase.Client.Auth.RefreshToken(authData.RefreshToken)
+	res, err := a.client.Auth.RefreshToken(authData.RefreshToken)
 	if err != nil {
 		return fmt.Errorf("failed to refresh token: %w", err)
 	}
 
-	session, err := supabase.Client.Auth.WithToken(res.AccessToken).GetUser()
-	supabase.Client.EnableTokenAutoRefresh(res.Session)
+	session, err := a.client.Auth.WithToken(res.AccessToken).GetUser()
+	a.client.EnableTokenAutoRefresh(res.Session)
 	if err != nil {
 		return fmt.Errorf("failed to get user: %w", err)
 	}
 
-	User = &models.User{
+	a.User = &models.User{
 		ID:        session.User.ID,
 		Email:     session.User.Email,
 		CreatedAt: session.User.CreatedAt,
@@ -106,18 +113,18 @@ func FetchLoggedInUser() error {
 	return nil
 }
 
-func Logout() error {
+func (a *AuthService) Logout() error {
 	authData, err := loadSession()
 	if err != nil {
 		return err
 	}
 
-	res, err := supabase.Client.Auth.RefreshToken(authData.RefreshToken)
+	res, err := a.client.Auth.RefreshToken(authData.RefreshToken)
 	if err != nil {
 		return fmt.Errorf("failed to refresh token: %w", err)
 	}
 
-	err = supabase.Client.Auth.WithToken(res.AccessToken).Logout()
+	err = a.client.Auth.WithToken(res.AccessToken).Logout()
 	if err != nil {
 		return fmt.Errorf("failed to logout user: %w", err)
 	}
@@ -134,7 +141,7 @@ func Logout() error {
 	if err != nil {
 		return err
 	}
-	User = nil
+	a.User = nil
 
 	return nil
 }

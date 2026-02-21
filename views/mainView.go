@@ -2,16 +2,18 @@ package views
 
 import (
 	"Callisto/components"
+	"Callisto/navigation"
+	"Callisto/services/auth"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 )
 
-func NewMainView(w fyne.Window) *fyne.Container {
+func NewMainView(w fyne.Window, authSvc *auth.AuthService, nav *navigation.Navigator) *fyne.Container {
 
 	// Top account bar
-	accountBar := components.NewAccountBar(w, NewSignInForm(w), NewSignUpForm(w))
+	accountBar := components.NewAccountBar(w, authSvc, nav, NewSignInForm(w, authSvc, nav), NewSignUpForm(w, authSvc, nav))
 
 	// Left-side request history
 	var contentSplit fyne.CanvasObject

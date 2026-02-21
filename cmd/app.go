@@ -9,18 +9,18 @@ import (
 	"fyne.io/fyne/v2/app"
 )
 
-func Execute() {
+func Execute(authSvc *auth.AuthService, nav *navigation.Navigator) {
 	a := app.New()
 	w := a.NewWindow("Callisto")
-	mainPage := views.NewMainView(w)
-	entryPage := views.NewEntryView(w)
+	mainPage := views.NewMainView(w, authSvc, nav)
+	entryPage := views.NewEntryView(w, authSvc, nav)
 
-	if auth.User != nil {
+	if authSvc.User != nil {
 		w.SetContent(mainPage)
-		navigation.PushPage(w, entryPage, mainPage)
+		nav.PushPage(w, entryPage, mainPage)
 	} else {
 		w.SetContent(entryPage)
-		navigation.PushPage(w, entryPage)
+		nav.PushPage(w, entryPage)
 	}
 	w.Resize(fyne.NewSize(1200, 800))
 	w.ShowAndRun()

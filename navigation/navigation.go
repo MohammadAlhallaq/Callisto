@@ -4,20 +4,26 @@ import (
 	"fyne.io/fyne/v2"
 )
 
-var pageStack []fyne.CanvasObject
+type Navigator struct {
+	pageStack []fyne.CanvasObject
+}
 
-func PushPage(w fyne.Window, pages ...fyne.CanvasObject) {
+func NewNavigator() *Navigator {
+	return &Navigator{}
+}
+
+func (n *Navigator) PushPage(w fyne.Window, pages ...fyne.CanvasObject) {
 	for _, page := range pages {
-		pageStack = append(pageStack, page)
+		n.pageStack = append(n.pageStack, page)
 		w.SetContent(page)
 	}
 }
 
-func PopPage(w fyne.Window) {
-	if len(pageStack) < 2 {
+func (n *Navigator) PopPage(w fyne.Window) {
+	if len(n.pageStack) < 2 {
 		return
 	}
-	pageStack = pageStack[:len(pageStack)-1]
-	prev := pageStack[len(pageStack)-1]
+	n.pageStack = n.pageStack[:len(n.pageStack)-1]
+	prev := n.pageStack[len(n.pageStack)-1]
 	w.SetContent(prev)
 }
